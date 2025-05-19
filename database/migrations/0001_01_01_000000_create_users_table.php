@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone_code')->nullable();
             $table->string('phone')->nullable();
-            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->string('profile_picture')->nullable();            $table->enum('gender', ['male', 'female'])->nullable();
             $table->unsignedTinyInteger('birth_day')->nullable();
             $table->unsignedTinyInteger('birth_month')->nullable();
             $table->unsignedSmallInteger('birth_year')->nullable();
@@ -23,8 +23,6 @@ return new class extends Migration
             $table->enum('user_type', ['admin', 'ostad', 'talib', 'ab'])->default('talib');
             $table->enum('domain', ['ta3lim_quran', 'dorous_diniya', 'ta3lim_lugha'])->nullable();
             $table->enum('fi2a', ['sighar', 'kibar'])->nullable();
-            $table->string('code')->nullable()->unique();
-            $table->foreignId('parent_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

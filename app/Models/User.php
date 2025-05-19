@@ -28,7 +28,6 @@ class User extends Authenticatable
         'nationality',
         'residence_country',
         'domain',
-        'child_code',
         'fi2a',
         'password',
     ];
@@ -50,9 +49,4 @@ class User extends Authenticatable
         return $this->hasMany(Evaluation::class);
     }
 
-    // Additional relationship for parents (Child users)
-    public function children()
-    {
-        return $this->hasMany(User::class, 'parent_id');
-    }
 }
