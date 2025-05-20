@@ -8,6 +8,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LessonController;
 
 
 
@@ -33,7 +34,7 @@ Route::get('/calendar', function () {
 })->name('calendar');
 
 
-
+Route::get('/lessons', [LessonController::class, 'index']);
 Route::view('/privacy-policy', 'legal.privacy-policy')->name('privacy.policy');
 Route::view('/terms-conditions', 'legal.terms-conditions')->name('terms.conditions');
 

@@ -69,15 +69,29 @@
 <body>
 
     <!-- Top Bar -->
-    <div class="topbar d-flex justify-content-between align-items-center">
-        <div>
-            <h5 class="mb-0">لوحة تحكم المدير</h5>
-        </div>
-        <div class="d-flex align-items-center">
+<div class="d-flex justify-content-between align-items-center p-3 text-white" style="background-color: #343a40; direction: rtl;">
+    <!-- العنوان في اليمين -->
+    <h5 class="m-0">لوحة تحكم المدير</h5>
+
+    <!-- Dropdown ديال Admin فـ اليسار -->
+    <div class="dropdown" style="direction: ltr;">
+        <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" href="#" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ asset('images/admin.png') }}" alt="صورة" width="32" height="32" class="rounded-circle me-2">
             <span>مرحباً، Admin</span>
-            <img src="{{ asset('images/admin.png') }}" alt="صورة المدير">
-        </div>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="adminDropdown">
+            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">الملف الشخصي</a></li>
+            <li>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item">تسجيل الخروج</button>
+                </form>
+            </li>
+        </ul>
     </div>
+</div>
+
+
 
     <div class="d-flex">
 <!-- Sidebar -->
@@ -91,7 +105,22 @@
             <a href="{{ route('lessons.index') }}">Show Leçon</a>
         </div>
     </div>
+
+
+    
+    <div class="dropdown-sidebar" onclick="toggleDropdown(this)">
+        exam
+        <div class="dropdown-sidebar-menu">
+            <a href="{{ route('admin.lecon') }}">Add exam</a>
+            <a href="{{ route('lessons.index') }}">Show exam</a>
+        </div>
+    </div>
+
+
 </div>
+
+
+
 
 
         <!-- Main Content -->
