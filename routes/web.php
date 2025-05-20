@@ -7,6 +7,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\AdminController;
+
+
 
 // صفحة البداية
 Route::get('/', function () {
@@ -74,6 +77,28 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
+
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
+
+Route::get('/admin/lecon', [AdminController::class, 'showLeconForm']);
+Route::post('/admin/lecon', [AdminController::class, 'storeLecon']);
+Route::delete('/admin/lecon/{id}', [AdminController::class, 'deleteLecon']);
+
+Route::get('/admin/exame', [AdminController::class, 'exameForm']);
+Route::post('/admin/exame', [AdminController::class, 'storeExame']);
+Route::delete('/admin/exame/{id}', [AdminController::class, 'deleteExame']);
+
+Route::prefix('admin')->group(function() {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.lecon');
+});
+
+Route::resource('lessons', LessonController::class);
 
 // auth.php
 require __DIR__.'/auth.php';

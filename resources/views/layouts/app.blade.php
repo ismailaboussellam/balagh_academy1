@@ -36,7 +36,7 @@
             <!-- Page Content -->
             <main class="flex-1">
                 <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6">
-                    {{ $slot }}
+                    @yield('content')
                 </div>
             </main>
             <footer class="text-center text-xs text-gray-400 py-4">
