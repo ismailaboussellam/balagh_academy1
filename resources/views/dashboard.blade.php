@@ -12,6 +12,9 @@
 </h1>
             <p class="text-gray-500 mb-6">سعيدون بعودتك! واصل رحلتك التعليمية اليوم.</p>
             <div class="mb-8">
+
+
+
                 <h2 class="text-lg font-semibold mb-4 text-gray-700">دروس اليوم</h2>
                 <div class="space-y-4">
                     <!-- بطاقة درس -->
@@ -86,9 +89,44 @@
         <!-- الشريط الجانبي -->
         <div class="space-y-6">
             <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-                <div class="w-20 h-20 rounded-full bg-indigo-200 mb-3 flex items-center justify-center overflow-hidden">
-                    <i class="fas fa-user text-indigo-700 text-4xl"></i>
+                <!-- ✅ صورة الملف الشخصي -->
+                <div class="w-24 h-24 rounded-full bg-indigo-200 mb-3 flex items-center justify-center overflow-hidden border-4 border-white shadow">
+                    @if(Auth::user() && Auth::user()->profile_image)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="object-cover w-full h-full">
+                    @else
+                        <i class="fas fa-user text-indigo-700 text-4xl"></i>
+                    @endif
                 </div>
+
+                <!-- ✅ معلومات المستخدم -->
+                <div class="text-center">
+                    @if(Auth::user())
+                        <h3 class="font-bold text-lg">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ Auth::user()->email }}</p>
+                    @else
+                        <h3 class="font-bold text-lg">زائر</h3>
+                        <p class="text-gray-500 text-sm">---</p>
+                    @endif
+                </div>
+
+                <!-- ✅ فورم رفع صورة جديدة -->
+                <form action="{{ route('profile.uploadImage') }}" method="POST" enctype="multipart/form-data" class="mt-3 text-center">
+                    @csrf
+                    <input type="file" name="image" class="text-sm mb-2" required>
+                    <button class="bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600 text-sm">تحديث الصورة</button>
+                </form>
+
+                <div class="flex justify-between w-full mt-4 text-center">
+                    <div>
+                        <span class="block text-indigo-700 font-bold text-xl">24</span>
+                        <span class="text-xs text-gray-500">دورة</span>
+                    </div>
+                    <div>
+                        <span class="block text-green-700 font-bold text-xl">18</span>
+                        <span class="text-xs text-gray-500">شهادة</span>
+                    </div>
+                </div>
+            </div>
 
 <div class="text-center">
     @if(Auth::user())
