@@ -26,6 +26,7 @@ class User extends Authenticatable
         'birth_month',
         'birth_year',
         'nationality',
+        'profile_picture',
         'residence_country',
         'domain',
         'fi2a',
@@ -34,19 +35,25 @@ class User extends Authenticatable
 
 
 
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class);
-    }
+  public function lessonsAsStudent()
+{
+    return $this->hasMany(Lesson::class, 'student_id');
+}
+
+public function lessonsAsTeacher()
+{
+    return $this->hasMany(Lesson::class, 'teacher_id');
+}
+
+public function exams()
+{
+    return $this->hasMany(Evaluation::class, 'student_id');
+}
+
 
     public function comments()
     {
         return $this->hasMany(Comment::class);
-    }
-
-    public function evaluations()
-    {
-        return $this->hasMany(Evaluation::class);
     }
 
 }

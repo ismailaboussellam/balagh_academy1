@@ -2,21 +2,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lesson;
-use App\Models\User; // Assuming you may need to assign a teacher
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
     public function index()
     {
-        $lessons = Lesson::with('teacher')->get(); // Assuming lessons have a 'teacher' relationship
-        return view('lessons.index', compact('lessons'));
+        $lessons = Lesson::with(['teacher', 'student'])->get();
+        return view('admin.lessons.index', compact('lessons'));
     }
 
     public function create()
     {
-        $teachers = User::where('role', 'teacher')->get(); // Get all teachers
-        return view('lessons.create', compact('teachers'));
+        $students = User::where('role', 'student')->get();
+        $teachers = User::where('role', 'teacher')->get();
+        return view('admin.lessons.create', compact('students', 'teachers'));
     }
 
     public function store(Request $request)
@@ -24,23 +25,20 @@ class LessonController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'video_url' => 'nullable|url',
             'teacher_id' => 'required|exists:users,id',
+            'student_id' => 'required|exists:users,id',
         ]);
 
         Lesson::create($validated);
-
-        return redirect()->route('lessons.index')->with('success', 'Lesson created successfully!');
-    }
-
-    public function show(Lesson $lesson)
-    {
-        return view('lessons.show', compact('lesson'));
+        return redirect()->route('lessons.index')->with('success', 'Lesson added successfully!');
     }
 
     public function edit(Lesson $lesson)
     {
-        $teachers = User::where('role', 'teacher')->get(); // Get all teachers
-        return view('lessons.edit', compact('lesson', 'teachers'));
+        $students = User::where('role', 'student')->get();
+        $teachers = User::where('role', 'teacher')->get();
+        return view('admin.lessons.edit', compact('lesson', 'students', 'teachers'));
     }
 
     public function update(Request $request, Lesson $lesson)
@@ -48,16 +46,18 @@ class LessonController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'video_url' => 'nullable|url',
             'teacher_id' => 'required|exists:users,id',
+            'student_id' => 'required|exists:users,id',
         ]);
 
         $lesson->update($validated);
-        return redirect()->route('lessons.index')->with('success', 'Lesson updated successfully!');
+        return redirect()->route('lessons.index')->with('success', 'Lesson updated!');
     }
 
     public function destroy(Lesson $lesson)
     {
         $lesson->delete();
-        return redirect()->route('lessons.index')->with('success', 'Lesson deleted successfully!');
+        return redirect()->route('lessons.index')->with('success', 'Lesson deleted.');
     }
 }

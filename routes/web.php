@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FatherController;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\AdminController;
 
 
 
@@ -41,6 +42,24 @@ Route::view('/terms-conditions', 'legal.terms-conditions')->name('terms.conditio
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+
+Route::get('/admin/dashboard', function () {
+    return redirect()->route('admin.dashboard'); // Redirect to admin dashboard
+});
+
+// Admin routes
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/lessons', [AdminController::class, 'storeLecon'])->name('admin.lessons.store');
+    Route::put('/lessons/{id}', [AdminController::class, 'updateLecon'])->name('admin.lessons.update');
+    Route::delete('/lessons/{id}', [AdminController::class, 'deleteLecon'])->name('admin.lessons.destroy');
+    Route::post('/exams', [AdminController::class, 'storeExame'])->name('admin.exams.store');
+    Route::put('/exams/{id}', [AdminController::class, 'updateExame'])->name('admin.exams.update');
+    Route::delete('/exams/{id}', [AdminController::class, 'deleteExame'])->name('admin.exams.destroy');
+    Route::get('/add-lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.add-lecon');
+    Route::get('/add-exame', [AdminController::class, 'showAddExameForm'])->name('admin.add-exame');
+});
 
 
 // تسجيل الطالب (بدون auth)

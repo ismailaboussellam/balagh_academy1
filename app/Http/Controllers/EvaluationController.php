@@ -10,56 +10,55 @@ class EvaluationController extends Controller
 {
     public function index()
     {
-        $evaluations = Evaluation::with('student', 'lesson')->get();
-        return view('evaluations.index', compact('evaluations'));
+        $exams = Evaluation::with(['lesson', 'student'])->get();
+        return view('admin.exams.index', compact('exams'));
     }
 
     public function create()
     {
-        $students = User::where('role', 'student')->get(); // Get all students
-        $lessons = Lesson::all(); // Get all lessons
-        return view('evaluations.create', compact('students', 'lessons'));
+        $students = User::where('role', 'student')->get();
+        $lessons = Lesson::all();
+        return view('admin.exams.create', compact('students', 'lessons'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file_url' => 'nullable|url',
             'student_id' => 'required|exists:users,id',
-            'lesson_id' => 'required|exists:lessons,id',
-            'score' => 'required|numeric|min:0|max:100',
+            'lesson_id' => 'nullable|exists:lessons,id',
         ]);
 
         Evaluation::create($validated);
-        return redirect()->route('evaluations.index')->with('success', 'Evaluation created successfully!');
+        return redirect()->route('exams.index')->with('success', 'Exam created.');
     }
 
-    public function show(Evaluation $evaluation)
+    public function edit(Evaluation $exam)
     {
-        return view('evaluations.show', compact('evaluation'));
+        $students = User::where('role', 'student')->get();
+        $lessons = Lesson::all();
+        return view('admin.exams.edit', compact('exam', 'students', 'lessons'));
     }
 
-    public function edit(Evaluation $evaluation)
-    {
-        $students = User::where('role', 'student')->get(); // Get all students
-        $lessons = Lesson::all(); // Get all lessons
-        return view('evaluations.edit', compact('evaluation', 'students', 'lessons'));
-    }
-
-    public function update(Request $request, Evaluation $evaluation)
+    public function update(Request $request, Evaluation $exam)
     {
         $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file_url' => 'nullable|url',
             'student_id' => 'required|exists:users,id',
-            'lesson_id' => 'required|exists:lessons,id',
-            'score' => 'required|numeric|min:0|max:100',
+            'lesson_id' => 'nullable|exists:lessons,id',
         ]);
 
-        $evaluation->update($validated);
-        return redirect()->route('evaluations.index')->with('success', 'Evaluation updated successfully!');
+        $exam->update($validated);
+        return redirect()->route('exams.index')->with('success', 'Exam updated.');
     }
 
-    public function destroy(Evaluation $evaluation)
+    public function destroy(Evaluation $exam)
     {
-        $evaluation->delete();
-        return redirect()->route('evaluations.index')->with('success', 'Evaluation deleted successfully!');
+        $exam->delete();
+        return redirect()->route('exams.index')->with('success', 'Exam deleted.');
     }
 }

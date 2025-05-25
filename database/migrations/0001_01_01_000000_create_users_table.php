@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('birth_year')->nullable();
             $table->string('nationality')->nullable();
             $table->string('residence_country')->nullable();
-            $table->enum('user_type', ['admin', 'ostad', 'talib', 'ab'])->default('talib');
+            $table->enum('user_type', ['admin', 'student', 'teacher'])->default('student');
             $table->enum('domain', ['ta3lim_quran', 'dorous_diniya', 'ta3lim_lugha'])->nullable();
             $table->enum('fi2a', ['sighar', 'kibar'])->nullable();
             $table->string('password');
