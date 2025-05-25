@@ -24,6 +24,7 @@
 
     <!-- Your app CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans text-gray-900 antialiased">
@@ -31,10 +32,8 @@
     {{-- Navbar --}}
     @include('partials.navbar')
     {{-- Page Content --}}
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-            {{ $slot }}
-        </div>
+    <div class="min-h-screen flex flex-col lg:items-center pt-6 lg:pt-0 bg-gray-100 dark:bg-gray-900">
+        {{ $slot }}
     </div>
 
     {{-- Footer --}}

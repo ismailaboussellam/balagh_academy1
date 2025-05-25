@@ -1,53 +1,59 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-6xl">
+            <h2 class="text-4xl font-extrabold text-gray-800 mb-3 text-center">Log in to Club System</h2>
+            <p class="text-gray-600 mb-10 text-center text-lg">Welcome back! Are you a member, staff, or admin?</p>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+            <!-- Flex direction adjusts to column on larger screens -->
+            <div class="flex flex-col lg:flex-row justify-center items-stretch gap-6">
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <!-- Member -->
+                <div class="w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
+                    <div class="h-48 bg-blue-50 flex items-center justify-center p-4">
+                        <img src="{{ asset('images/student.png') }}" alt="Member" class="h-32 w-auto">
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-2xl font-bold text-blue-600">Club Member</h3>
+                        <p class="text-sm text-gray-600 mt-2 mb-5">Log in to access club services and activities</p>
+                        <a href="{{ route('login') }}" class="block w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200 font-medium">
+                            Continue as Member
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Admin -->
+                <div class="w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
+                    <div class="h-48 bg-red-50 flex items-center justify-center p-4">
+                        <img src="{{ asset('images/admin.png') }}" alt="Admin" class="h-32 w-auto">
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-2xl font-bold text-red-600">System Admin</h3>
+                        <p class="text-sm text-gray-600 mt-2 mb-5">Log in to control all club settings and operations</p>
+                        <a href="{{ route('login') }}" class="block w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition duration-200 font-medium">
+                            Continue as Admin
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Staff -->
+                <div class="w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
+                    <div class="h-48 bg-green-50 flex items-center justify-center p-4">
+                        <img src="{{ asset('images/teacher.png') }}" alt="Staff" class="h-32 w-auto">
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-2xl font-bold text-green-600">Club Staff</h3>
+                        <p class="text-sm text-gray-600 mt-2 mb-5">Log in to manage daily tasks and activities</p>
+                        <a href="{{ route('login') }}" class="block w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition duration-200 font-medium">
+                            Continue as Staff
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-10 text-center text-gray-600 text-sm">
+                No account yet?
+                <a href="#" class="text-blue-600 hover:underline font-medium">Register</a>
+            </p>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-
-            @if (Route::has('register'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('register') }}">
-                    {{ __('I do not have an account') }}
-                </a>
-            @endif
-        </div>
-    </form>
+    </div>
 </x-guest-layout>

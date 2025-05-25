@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProfileController extends Controller
 {
@@ -68,4 +70,27 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    public function uploadProfileImage(Request $request): RedirectResponse
+{
+    $request->validate([
+        'image' => 'required|image|max:2048',
+    ]);
+
+    $user = $request->user();
+
+    // حدف الصورة القديمة إلى كانت
+    if ($user->profile_image) {
+        Storage::disk('public')->delete($user->profile_image);
+    }
+
+    // تخزين الصورة
+    $path = $request->file('image')->store('profile_images', 'public');
+
+    // حفظ المسار في قاعدة البيانات
+    $user->profile_image = $path;
+    $user->save();
+
+    return Redirect::back()->with('status', 'تم تحديث الصورة بنجاح.');
+}
+
 }

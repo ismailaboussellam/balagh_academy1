@@ -14,7 +14,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone_code')->nullable();
             $table->string('phone')->nullable();
-            $table->string('profile_picture')->nullable();            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->string('profile_picture')->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
             $table->unsignedTinyInteger('birth_day')->nullable();
             $table->unsignedTinyInteger('birth_month')->nullable();
             $table->unsignedSmallInteger('birth_year')->nullable();

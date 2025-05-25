@@ -3,18 +3,20 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- القسم الرئيسي -->
         <div class="md:col-span-2">
-<h1 class="text-3xl font-bold mb-2 text-indigo-700">
-    @if(Auth::user())
-        مرحبا، {{ Auth::user()->first_name }} 👋
-    @else
-        مرحبا بك 👋
-    @endif
-</h1>
+            <h1 class="text-3xl font-bold mb-2 text-indigo-700">
+                @if(Auth::user())
+                    مرحبا، {{ Auth::user()->first_name }} 👋
+                @else
+                    مرحبا بك 👋
+                @endif
+            </h1>
             <p class="text-gray-500 mb-6">سعيدون بعودتك! واصل رحلتك التعليمية اليوم.</p>
+
+            <!-- دروس اليوم -->
             <div class="mb-8">
                 <h2 class="text-lg font-semibold mb-4 text-gray-700">دروس اليوم</h2>
                 <div class="space-y-4">
-                    <!-- بطاقة درس -->
+                    <!-- درس 1 -->
                     <div class="bg-white rounded-xl shadow flex items-center justify-between p-5">
                         <div class="flex items-center gap-4">
                             <div class="bg-indigo-100 rounded-full p-3">
@@ -38,7 +40,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- بطاقة درس أخرى -->
+
+                    <!-- درس 2 -->
                     <div class="bg-white rounded-xl shadow flex items-center justify-between p-5">
                         <div class="flex items-center gap-4">
                             <div class="bg-green-100 rounded-full p-3">
@@ -64,7 +67,8 @@
                     </div>
                 </div>
             </div>
-            <!-- الكلاسات -->
+
+            <!-- صفوفك -->
             <div>
                 <h2 class="text-lg font-semibold mb-4 text-gray-700">صفوفك</h2>
                 <div class="bg-yellow-50 rounded-xl shadow p-5 flex items-center gap-4">
@@ -83,23 +87,42 @@
                 </div>
             </div>
         </div>
+
         <!-- الشريط الجانبي -->
         <div class="space-y-6">
             <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-                <div class="w-20 h-20 rounded-full bg-indigo-200 mb-3 flex items-center justify-center overflow-hidden">
-                    <i class="fas fa-user text-indigo-700 text-4xl"></i>
+                <!-- ✅ صورة الملف الشخصي مع زر التعديل -->
+                <div class="relative group w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow bg-indigo-200 mb-3">
+                    @if(Auth::user() && Auth::user()->profile_image)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="object-cover w-full h-full">
+                    @else
+                        <i class="fas fa-user text-indigo-700 text-4xl flex items-center justify-center w-full h-full"></i>
+                    @endif
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <label for="imageInput" class="cursor-pointer text-white text-xl">
+                            <i class="fas fa-pen"></i>
+                        </label>
+                    </div>
                 </div>
 
-<div class="text-center">
-    @if(Auth::user())
-        <h3 class="font-bold text-lg">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h3>
-        <p class="text-gray-500 text-sm">{{ Auth::user()->email }}</p>
-    @else
-        <h3 class="font-bold text-lg">زائر</h3>
-        <p class="text-gray-500 text-sm">---</p>
-    @endif
-</div>
+                <!-- ✅ الفورم لرفع الصورة -->
+                <form action="{{ route('profile.uploadImage') }}" method="POST" enctype="multipart/form-data" class="text-center">
+                    @csrf
+                    <input type="file" id="imageInput" name="image" class="hidden" onchange="this.form.submit()" required>
+                </form>
 
+                <!-- معلومات المستخدم -->
+                <div class="text-center mt-4">
+                    @if(Auth::user())
+                        <h3 class="font-bold text-lg">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ Auth::user()->email }}</p>
+                    @else
+                        <h3 class="font-bold text-lg">زائر</h3>
+                        <p class="text-gray-500 text-sm">---</p>
+                    @endif
+                </div>
+
+                <!-- الدورات والشهادات -->
                 <div class="flex justify-between w-full mt-4 text-center">
                     <div>
                         <span class="block text-indigo-700 font-bold text-xl">24</span>
@@ -111,6 +134,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- نقاط الخبرة -->
             <div class="bg-green-100 rounded-xl shadow p-6 flex items-center justify-between">
                 <div>
                     <span class="block text-2xl font-bold text-green-700">2400 XP</span>
@@ -118,6 +143,8 @@
                 </div>
                 <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">جمع النقاط</button>
             </div>
+
+            <!-- استشارة وتحديد هدف -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-orange-100 rounded-xl shadow p-4 flex flex-col items-center">
                     <i class="fas fa-comments text-orange-500 text-2xl mb-2"></i>
@@ -130,7 +157,8 @@
                     <span class="text-xs text-gray-500 text-center">حدد هدفك وخطة دراستك</span>
                 </div>
             </div>
-            <!-- رسم بياني بسيط (صورة فقط) -->
+
+            <!-- رسم بياني -->
             <div class="bg-white rounded-xl shadow p-6">
                 <h4 class="font-bold mb-2 text-gray-700">نشاطك الدراسي</h4>
                 <img src="https://www.chartjs.org/img/chartjs-logo.svg" alt="Graph" class="w-full h-24 object-contain opacity-40">
