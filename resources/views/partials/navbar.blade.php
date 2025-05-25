@@ -15,7 +15,7 @@
                 <a href="{{ route("programe") }}" class="text-gray-700 hover:text-green-700 transition">برنامج الدراسة</a>
                 <a href="{{ route('system') }}" class="text-gray-700 hover:text-green-700 transition">النظام الأكاديمي</a>
                 <a href="{{ route('contact_us') }}" class="text-gray-700 hover:text-green-700 transition">اتصل بنا</a>
-                <a href="{{ route('login') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">تسجيل الدخول</a>
+                <a href="{{ route('select_login') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">تسجيل الدخول</a>
             </div>
 
             <!-- Mobile Button -->

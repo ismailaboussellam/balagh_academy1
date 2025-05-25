@@ -10,117 +10,80 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LessonController;
 
-
-
-// صفحة البداية
-Route::get('/', function () {
-    return view('pages.home');
-})->name('home');
-
-Route::get('/system', function () {
-    return view('pages.system');
-})->name('system');
-
-Route::get('/contact_us', function () {
-    return view('pages.contact_us');
-})->name('contact_us');
-
-Route::get('/programe', function () {
-    return view('pages.program');
-})->name('programe');
-
-Route::get('/calendar', function () {
-    return view('pages.calendar');
-})->name('calendar');
-
-
-Route::get('/lessons', [LessonController::class, 'index']);
+// صفحات عامة
+Route::view('/', 'pages.home')->name('home');
+Route::view('/system', 'pages.system')->name('system');
+Route::view('/contact_us', 'pages.contact_us')->name('contact_us');
+Route::view('/programe', 'pages.program')->name('programe');
+Route::view('/calendar', 'pages.calendar')->name('calendar');
 Route::view('/privacy-policy', 'legal.privacy-policy')->name('privacy.policy');
 Route::view('/terms-conditions', 'legal.terms-conditions')->name('terms.conditions');
 
-// تسجيل الدخول والخروج
-Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+// دروس وامتحانات وإشعارات (عرض فقط)
+Route::view('/lessons', 'lessons.index')->name('lessons.index');
+Route::view('/exams', 'exams.index')->name('exams.index');
+Route::view('/notifications', 'notifications.index')->name('notifications.index');
+
+// تسجيل الدخول واختيار نوع المستخدم
+Route::view('/select_login', 'pages.select_login')->name('select_login');
+
+Route::get('/student/login', [AuthenticatedSessionController::class, 'create'])->name('student_login');
+Route::post('/student/login', [AuthenticatedSessionController::class, 'store'])->name('student_login.submit');
+
+Route::get('/admin/login', [AuthenticatedSessionController::class, 'create'])->name('admin_login');
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin_login.submit');
+
+Route::get('/teacher/login', [AuthenticatedSessionController::class, 'create'])->name('teacher_login');
+Route::post('/teacher/login', [AuthenticatedSessionController::class, 'store'])->name('teacher_login.submit');
+
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+Route::get('/refresh-captcha', [AuthenticatedSessionController::class, 'refreshCaptcha']);
 
-
-Route::get('/admin/dashboard', function () {
-    return redirect()->route('admin.dashboard'); // Redirect to admin dashboard
-});
-
-// Admin routes
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::post('/lessons', [AdminController::class, 'storeLecon'])->name('admin.lessons.store');
-    Route::put('/lessons/{id}', [AdminController::class, 'updateLecon'])->name('admin.lessons.update');
-    Route::delete('/lessons/{id}', [AdminController::class, 'deleteLecon'])->name('admin.lessons.destroy');
-    Route::post('/exams', [AdminController::class, 'storeExame'])->name('admin.exams.store');
-    Route::put('/exams/{id}', [AdminController::class, 'updateExame'])->name('admin.exams.update');
-    Route::delete('/exams/{id}', [AdminController::class, 'deleteExame'])->name('admin.exams.destroy');
-    Route::get('/add-lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.add-lecon');
-    Route::get('/add-exame', [AdminController::class, 'showAddExameForm'])->name('admin.add-exame');
-});
-
+// تسجيل حساب جديد
+Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('register', [RegisteredUserController::class, 'store']);
 
 // تسجيل الطالب (بدون auth)
 Route::get('student/register', [StudentController::class, 'showRegisterForm'])->name('student.register.form');
 Route::post('student/register', [StudentController::class, 'register'])->name('student.register');
 
-Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-Route::post('register', [RegisteredUserController::class, 'store']);
+// لوحة تحكم الطالب
+Route::view('student/dashboard', 'dashboard.student_dashboard')->name('student.dashboard');
 
-Route::get('student/dashboard', function() {
-    return view('dashboard');
-})->name('student.dashboard');
+// تحميل صورة الملف الشخصي
+Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');
 
-// ... existing code ...
-Route::get('/lessons', function () {
-    return view('lessons.index');
-})->name('lessons.index');
-
-Route::get('/exams', function () {
-    return view('exams.index');
-})->name('exams.index');
-
-Route::get('/notifications', function () {
-    return view('notifications.index');
-})->name('notifications.index');
-// ... existing code ...
-
-
-
-// مجموعة محمية بالمصادقة
+// إدارة الملف الشخصي (محمي)
 Route::middleware('auth')->group(function () {
-    // بروفايل
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// profile immage picture
-
-Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');
-
-
-
-Route::middleware(['auth', 'is_admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-});
-
-Route::get('/admin/lecon', [AdminController::class, 'showLeconForm']);
-Route::post('/admin/lecon', [AdminController::class, 'storeLecon']);
-Route::delete('/admin/lecon/{id}', [AdminController::class, 'deleteLecon']);
-
-Route::get('/admin/exame', [AdminController::class, 'exameForm']);
-Route::post('/admin/exame', [AdminController::class, 'storeExame']);
-Route::delete('/admin/exame/{id}', [AdminController::class, 'deleteExame']);
-
-Route::prefix('admin')->group(function() {
+// لوحة تحكم المسؤول وإدارة الدروس والامتحانات (محمي is_admin)
+Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // دروس
+    Route::get('/add-lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.add-lecon');
+    Route::post('/lessons', [AdminController::class, 'storeLecon'])->name('admin.lessons.store');
+    Route::put('/lessons/{id}', [AdminController::class, 'updateLecon'])->name('admin.lessons.update');
+    Route::delete('/lessons/{id}', [AdminController::class, 'deleteLecon'])->name('admin.lessons.destroy');
+
+    // امتحانات
+    Route::get('/add-exame', [AdminController::class, 'showAddExameForm'])->name('admin.add-exame');
+    Route::post('/exams', [AdminController::class, 'storeExame'])->name('admin.exams.store');
+    Route::put('/exams/{id}', [AdminController::class, 'updateExame'])->name('admin.exams.update');
+    Route::delete('/exams/{id}', [AdminController::class, 'deleteExame'])->name('admin.exams.destroy');
+
+    // طرق بديلة للوصول إلى النماذج
     Route::get('/lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.lecon');
+    Route::get('/exame', [AdminController::class, 'exameForm'])->name('admin.exame');
 });
 
+// RESTful route للدروس
 Route::resource('lessons', LessonController::class);
 
-// auth.php
+// تحميل ملف auth.php
 require __DIR__.'/auth.php';
