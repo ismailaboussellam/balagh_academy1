@@ -34,7 +34,6 @@ class StudentController extends Controller
             'last_name'  => $request->last_name,
             'email'      => $request->email,
             'phone'      => $request->phone,
-            'user_type'  => 'student',
             'password'   => Hash::make($request->password),
             'code'       => $code,
         ]);
@@ -43,5 +42,9 @@ class StudentController extends Controller
         Auth::login($user);
 
         return redirect()->route('student.dashboard');
+    }
+
+    public function dashboard() {
+        return view('dashboard.student_dashboard');
     }
 }

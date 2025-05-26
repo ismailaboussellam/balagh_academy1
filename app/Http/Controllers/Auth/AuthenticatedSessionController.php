@@ -30,8 +30,9 @@ class AuthenticatedSessionController extends Controller
         } elseif (Str::contains($route, 'teacher')) {
             return view('auth.teacher_login');
         } else {
-            return view('auth.student_login'); // default
+            return view('auth.student_login'); 
         }
+
 }
 
 
@@ -51,8 +52,8 @@ class AuthenticatedSessionController extends Controller
     public function store(Request $request)
     {
         $errors = [];
-
         $user = User::where('email', $request->email)->first();
+
 
         if (!$user) {
             $errors['email'] = 'Email address not found';
@@ -75,17 +76,16 @@ class AuthenticatedSessionController extends Controller
         }
 
         Auth::login($user);
-        $routeName = request()->route()->getName();
+        if (Auth::user()->user_type === 'student') {
+            return redirect()->route('student.dashboard');
+        } elseif (Auth::user()->user_type === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif (Auth::user()->user_type === 'teacher') {
+            return redirect()->route('teacher.dashboard');
 
-        switch ($routeName) {
-            case 'student_login.submit':
-                return redirect()->route('student.dashboard');
-            case 'admin_login.submit':
-                return redirect()->route('admin.dashboard');
-            case 'teacher_login.submit':
-                return redirect()->route('teacher.dashboard');
-            default:
-                return redirect()->route('home');
+        } 
+        else {
+            return redirect()->route('select_login');
         }
     }
 

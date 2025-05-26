@@ -28,7 +28,7 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- CAPTCHA -->
+
        <div class="mt-4">
             <x-input-label for="captcha" :value="__('Verification Code')" />
             <div class="flex items-center gap-4">
@@ -46,11 +46,6 @@
                 class="block mt-2 w-full"
                 type="text"
                 name="captcha"
-                required
-                pattern="[A-Z0-9]{6}"
-                title="Le code doit contenir exactement 6 caractères alphanumériques (majuscules)"
-                maxlength="6"
-                minlength="6"
             />
             <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
         </div>

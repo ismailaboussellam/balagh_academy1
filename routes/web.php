@@ -49,7 +49,7 @@ Route::get('student/register', [StudentController::class, 'showRegisterForm'])->
 Route::post('student/register', [StudentController::class, 'register'])->name('student.register');
 
 // لوحة تحكم الطالب
-Route::view('student/dashboard', 'dashboard.student_dashboard')->name('student.dashboard');
+Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
 
 // تحميل صورة الملف الشخصي
 Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');
@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // لوحة تحكم المسؤول وإدارة الدروس والامتحانات (محمي is_admin)
-Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'IsAdmin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     // دروس

@@ -18,7 +18,7 @@ class AdminController extends Controller
         $students = User::where('role', 'student')->get();
         $teachers = User::where('role', 'teacher')->get();
 
-        return view('admin.dashboard', compact('lessons', 'exams', 'students', 'teachers'));
+        return view('dashboard.admin_dashboard', compact('lessons', 'exams', 'students', 'teachers'));
     }
 
     public function storeLecon(Request $request)
@@ -37,7 +37,7 @@ class AdminController extends Controller
 
         Lesson::create($request->all());
 
-        return redirect()->route('admin.dashboard')->with('success', 'Lesson created successfully.');
+        return redirect()->route('dashboard.admin_dashboard')->with('success', 'Lesson created successfully.');
     }
 
     public function updateLecon(Request $request, $id)
@@ -58,7 +58,7 @@ class AdminController extends Controller
 
         $lesson->update($request->all());
 
-        return redirect()->route('admin.dashboard')->with('success', 'Lesson updated successfully.');
+        return redirect()->route('dashboard.admin_dashboard')->with('success', 'Lesson updated successfully.');
     }
 
     public function deleteLecon($id)
@@ -66,7 +66,7 @@ class AdminController extends Controller
         $lesson = Lesson::findOrFail($id);
         $lesson->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Lesson deleted successfully.');
+        return redirect()->route('dashboard.admin_dashboard')->with('success', 'Lesson deleted successfully.');
     }
 
     public function storeExame(Request $request)
@@ -85,7 +85,7 @@ class AdminController extends Controller
 
         Evaluation::create($request->all());
 
-        return redirect()->route('admin.dashboard')->with('success', 'Exam created successfully.');
+        return redirect()->route('dashboard.admin_dashboard')->with('success', 'Exam created successfully.');
     }
 
     public function updateExame(Request $request, $id)
@@ -106,7 +106,7 @@ class AdminController extends Controller
 
         $exam->update($request->all());
 
-        return redirect()->route('admin.dashboard')->with('success', 'Exam updated successfully.');
+        return redirect()->route('dashboard.admin_dashboard')->with('success', 'Exam updated successfully.');
     }
 
     public function deleteExame($id)
@@ -114,7 +114,7 @@ class AdminController extends Controller
         $exam = Evaluation::findOrFail($id);
         $exam->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Exam deleted successfully.');
+        return redirect()->route('dashboard.admin_dashboard')->with('success', 'Exam deleted successfully.');
     }
 
     public function showAddLeconForm()

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'birth_day',
         'birth_month',
         'birth_year',
+        'user_type',
         'nationality',
         'profile_picture',
         'residence_country',
