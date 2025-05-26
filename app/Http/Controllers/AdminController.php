@@ -11,14 +11,43 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
-    public function dashboard()
-    {
-        $lessons = Lesson::with(['student', 'teacher'])->paginate(10);
-        $exams = Evaluation::with(['student', 'lesson'])->paginate(10);
-        $students = User::where('user_type', 'student')->get();
-        $teachers = User::where('user_type', 'teacher')->get();
-        return view('dashboard.admin_dashboard', compact('lessons', 'exams', 'students', 'teachers'));
-    }
+
+
+public function dashboard() {
+            return view('admin.dashboard');
+        }
+        public function profile() {
+            return view('admin.profile');
+        }
+        public function notifications() {
+            return view('admin.notifications');
+        }
+        public function students() {
+            return view('admin.students');
+        }
+        public function filiers() {
+            return view('admin.filiers');
+        }
+        public function groups() {
+            return view('admin.groups');
+        }
+        public function teachers() {
+            return view('admin.teachers');
+        }
+        public function lessons() {
+            return view('admin.lessons');
+        }
+    
+
+
+    // public function dashboard()
+    // {
+    //     $lessons = Lesson::with(['student', 'teacher'])->paginate(10);
+    //     $exams = Evaluation::with(['student', 'lesson'])->paginate(10);
+    //     $students = User::where('user_type', 'student')->get();
+    //     $teachers = User::where('user_type', 'teacher')->get();
+    //     return view('dashboard.admin_dashboard', compact('lessons', 'exams', 'students', 'teachers'));
+    // }
     //test
     public function storeLecon(Request $request)
     {

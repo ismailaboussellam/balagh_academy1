@@ -10,6 +10,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LessonController;
 
+
+require __DIR__.'/admin.php';
 // صفحات عامة
 Route::view('/', 'pages.home')->name('home');
 Route::view('/system', 'pages.system')->name('system');
