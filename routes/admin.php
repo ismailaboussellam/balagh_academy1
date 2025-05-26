@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
+    // ... routes ...
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::get('/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');

@@ -21,13 +21,7 @@ class Lesson extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function student()
-{
-    return $this->belongsTo(User::class, 'student_id');
-}
-
-
-    public function exams()
+    public function evaluations()
     {
         return $this->hasMany(Evaluation::class);
     }

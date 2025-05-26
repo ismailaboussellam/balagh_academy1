@@ -76,11 +76,11 @@ class AuthenticatedSessionController extends Controller
         }
 
         Auth::login($user);
-        if (Auth::user()->user_type === 'student') {
+        if (Auth::user()->role === 'student') {
             return redirect()->route('student.dashboard');
-        } elseif (Auth::user()->user_type === 'admin') {
+        } elseif (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
-        } elseif (Auth::user()->user_type === 'teacher') {
+        } elseif (Auth::user()->role === 'teacher') {
             return redirect()->route('teacher.dashboard');
 
         } 

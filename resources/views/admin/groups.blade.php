@@ -1,5 +1,5 @@
 @extends('layouts.admin')
 @section('title', 'إدارة الأساتذة')
 @section('content')
-    <h2>إدارة الأساتذة</h2>
+    <h2>إدارة groupe</h2>
 @endsection

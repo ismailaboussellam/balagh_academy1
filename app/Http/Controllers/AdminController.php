@@ -13,9 +13,9 @@ class AdminController extends Controller
 {
 
 
-public function dashboard() {
-            return view('admin.dashboard');
-        }
+// public function dashboard() {
+//             return view('admin.dashboard');
+//         }
         public function profile() {
             return view('admin.profile');
         }
@@ -40,14 +40,14 @@ public function dashboard() {
     
 
 
-    // public function dashboard()
-    // {
-    //     $lessons = Lesson::with(['student', 'teacher'])->paginate(10);
-    //     $exams = Evaluation::with(['student', 'lesson'])->paginate(10);
-    //     $students = User::where('user_type', 'student')->get();
-    //     $teachers = User::where('user_type', 'teacher')->get();
-    //     return view('dashboard.admin_dashboard', compact('lessons', 'exams', 'students', 'teachers'));
-    // }
+    public function dashboard()
+    {
+        $lessons = Lesson::with(['student', 'teacher'])->paginate(10);
+        $exams = Evaluation::with(['student', 'lesson'])->paginate(10);
+        $students = User::where('role', 'student')->get();
+        $teachers = User::where('role', 'teacher')->get();
+        return view('admin.dashboard', compact('lessons', 'exams', 'students', 'teachers'));
+    }
     //test
     public function storeLecon(Request $request)
     {

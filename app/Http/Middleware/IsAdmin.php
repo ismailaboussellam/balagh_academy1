@@ -8,12 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IsAdmin
 {
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (auth()->check() && auth()->user()->user_type === 'admin') {
-            return $next($request);
-        }
-
-        abort(403, 'Access denied');
+    public function handle($request, Closure $next)
+{
+    if (auth()->check() && auth()->user()->role === 'admin') {
+        return $next($request);
     }
+    abort(403, 'ACCESS DENIED');
+}
 }

@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
             'birth_year' => $request->birth_year,
             'nationality' => $request->nationality,
             'residence_country' => $request->residence_country,
-            'user_type' => 'talib',
+            'role' => 'studnet',
             'domain' => $request->domain,
             'fi2a' => $request->fi2a,
             'password' => Hash::make($request->password),

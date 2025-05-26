@@ -11,10 +11,6 @@ class Evaluation extends Model
 
     protected $fillable = ['student_id', 'lesson_id', 'score'];
 
-    public function teacher()
-{
-    return $this->belongsTo(User::class, 'teacher_id');
-}
     public function lesson()
     {
         return $this->belongsTo(Lesson::class);

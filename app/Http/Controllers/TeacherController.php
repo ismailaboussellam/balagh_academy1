@@ -37,7 +37,7 @@ class TeacherController extends Controller
             'last_name'  => $request->last_name,
             'email'      => $request->email,
             'phone'      => $request->phone,
-            'user_type'  => 'teacher', // or whatever value you use for teachers
+            'role'  => 'teacher', // or whatever value you use for teachers
             'password'   => Hash::make($request->password),
             // Add more fields if needed
         ]);

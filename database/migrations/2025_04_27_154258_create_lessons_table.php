@@ -16,9 +16,12 @@ return new class extends Migration
             $table->string('title');
             $table->string('video_path')->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('teacher_id')->constrained('users');
+            $table->unsignedBigInteger('teacher_id');
             $table->foreignId('subject_id')->constrained('subjects');
             $table->timestamps();
+            
+            // Add the foreign key constraint separately with onDelete cascade
+            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
