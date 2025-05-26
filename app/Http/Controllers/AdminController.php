@@ -19,7 +19,7 @@ class AdminController extends Controller
         $teachers = User::where('user_type', 'teacher')->get();
         return view('dashboard.admin_dashboard', compact('lessons', 'exams', 'students', 'teachers'));
     }
-
+    //test
     public function storeLecon(Request $request)
     {
         $validator = Validator::make($request->all(), [
