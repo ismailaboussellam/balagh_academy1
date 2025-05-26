@@ -1,4 +1,4 @@
 
-<x-guest-layout>
+<x-app-layout>
 hi how are you ?
-</x-guest-layout>
+</x-app-layout>
