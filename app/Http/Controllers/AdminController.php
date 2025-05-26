@@ -15,9 +15,8 @@ class AdminController extends Controller
     {
         $lessons = Lesson::with(['student', 'teacher'])->paginate(10);
         $exams = Evaluation::with(['student', 'lesson'])->paginate(10);
-        $students = User::where('role', 'student')->get();
-        $teachers = User::where('role', 'teacher')->get();
-
+        $students = User::where('user_type', 'student')->get();
+        $teachers = User::where('user_type', 'teacher')->get();
         return view('dashboard.admin_dashboard', compact('lessons', 'exams', 'students', 'teachers'));
     }
 
