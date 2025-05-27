@@ -12,7 +12,7 @@ use Illuminate\Auth\Events\Registered;
 class TeacherController extends Controller
 {
     public function dashboard(){
-        return view('dashboard.teacher_dashboard');
+        return view('teacher.dashboard');
     }
     // Show the teacher registration form
     public function showRegisterForm()

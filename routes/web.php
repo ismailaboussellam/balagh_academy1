@@ -52,7 +52,17 @@ Route::post('student/register', [StudentController::class, 'register'])->name('s
 
 // لوحة تحكم الطالب
 Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
-Route::get('teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+//Route::get('teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+
+//لوحة تحكم الاستاذ
+Route::get('teacher/dashboard', [TeacherController::class, 'dashboard'])
+    ->middleware(['auth', 'is_teacher'])
+    ->name('teacher.dashboard');
+
+
+Route::get('teacher/dashboard', [TeacherController::class, 'dashboard'])
+    ->middleware(['auth', 'is_teacher'])
+    ->name('teacher.dashboard');
 
 // تحميل صورة الملف الشخصي
 Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');
