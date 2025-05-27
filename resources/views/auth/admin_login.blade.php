@@ -29,7 +29,11 @@
         </div>
 
 
+<<<<<<< HEAD
+       <div class="mt-4">
+=======
         <div class="mt-4">
+>>>>>>> eb953aad3e72bbdfa196aef1ddf7a07fd95d84cc
             <x-input-label for="captcha" :value="__('Verification Code')" />
             <div class="flex items-center gap-4">
                 <div class="bg-gray-100 p-3 rounded-lg text-xl font-bold tracking-wider select-none captcha-display">
@@ -48,8 +52,15 @@
                 name="captcha"
             />
             <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+        </div>
+=======
+>>>>>>> aced50fb043d4eb48d9532f815c0d8047a02d6fd
         </div> 
+>>>>>>> eb953aad3e72bbdfa196aef1ddf7a07fd95d84cc
 
         <!-- Remember Me -->
         <div class="block mt-4">

@@ -47,6 +47,7 @@
                 name="captcha"
             />
             <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
+
         </div> 
 
         <!-- Remember Me -->
