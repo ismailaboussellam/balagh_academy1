@@ -69,6 +69,8 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::get('/subjects/{subject}/lessons/{lesson}/edit', [TeacherController::class, 'editLesson'])->name('teacher.lessons.edit');
     Route::put('/subjects/{subject}/lessons/{lesson}', [TeacherController::class, 'updateLesson'])->name('teacher.lessons.update');
     Route::delete('/subjects/{subject}/lessons/{lesson}', [TeacherController::class, 'deleteLesson'])->name('teacher.lessons.delete');
+    Route::post('/subjects/{subject}/lessons/{lesson}/comments', [TeacherController::class, 'storeComment'])->name('teacher.comments.store');
+    Route::post('/subjects/{subject}/lessons/{lesson}/evaluations', [TeacherController::class, 'storeEvaluation'])->name('teacher.evaluations.store');
 });
 
 

@@ -54,6 +54,66 @@
                     </tbody>
                 </table>
 
+                {{-- ✅ قسم التعليقات والتقييمات --}}
+                <div class="mt-6">
+                    <h4 class="text-md font-semibold mb-2">التعليقات والتقييمات</h4>
+                    @foreach ($lessons as $lesson)
+                        <div class="mb-4 p-4 bg-gray-100 rounded">
+                            <h5 class="font-bold">{{ $lesson->title }}</h5>
+
+                            {{-- التعليقات --}}
+                            <div class="mt-2">
+                                <h6 class="font-semibold">التعليقات:</h6>
+                                @if ($lesson->comments->count())
+                                    @foreach ($lesson->comments as $comment)
+                                        <p class="text-sm">{{ $comment->user->first_name }} {{ $comment->user->last_name }}: {{ $comment->content }}</p>
+                                    @endforeach
+                                @else
+                                    <p class="text-sm">لا توجد تعليقات</p>
+                                @endif
+                                <form action="{{ route('teacher.comments.store', [$subject, $lesson]) }}" method="POST" class="mt-2">
+                                    @csrf
+                                    <textarea name="content" class="w-full rounded-md border-gray-300 shadow-sm" placeholder="أضف تعليقًا"></textarea>
+                                    @error('content')
+                                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                                    @enderror
+                                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded mt-2">إضافة تعليق</button>
+                                </form>
+                            </div>
+
+                            {{-- التقييمات --}}
+                            <div class="mt-4">
+                                <h6 class="font-semibold">التقييمات:</h6>
+                                @if ($lesson->evaluations->count())
+                                    @foreach ($lesson->evaluations as $evaluation)
+                                        <p class="text-sm">{{ $evaluation->user->first_name }} {{ $evaluation->user->last_name }}: {{ $evaluation->rating }}/5 - {{ $evaluation->comment ?? 'لا يوجد تعليق' }}</p>
+                                    @endforeach
+                                @else
+                                    <p class="text-sm">لا توجد تقييمات</p>
+                                @endif
+                                <form action="{{ route('teacher.evaluations.store', [$subject, $lesson]) }}" method="POST" class="mt-2">
+                                    @csrf
+                                    <select name="rating" class="rounded-md border-gray-300 shadow-sm">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                    <textarea name="comment" class="w-full rounded-md border-gray-300 shadow-sm mt-2" placeholder="أضف تعليقًا (اختياري)"></textarea>
+                                    @error('rating')
+                                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                                    @enderror
+                                    @error('comment')
+                                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                                    @enderror
+                                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded mt-2">إضافة تقييم</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
                 <a href="{{ route('teacher.subjects') }}" class="bg-gray-600 text-white px-4 py-2 rounded mt-4 inline-block">
                     رجوع إلى قائمة الدورات
                 </a>

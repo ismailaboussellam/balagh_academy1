@@ -1,5 +1,4 @@
 <?php
-// app/Models/Comment.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +8,7 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lesson_id', 'user_id', 'comment'];
+    protected $fillable = ['lesson_id', 'user_id', 'content'];
 
     public function lesson()
     {

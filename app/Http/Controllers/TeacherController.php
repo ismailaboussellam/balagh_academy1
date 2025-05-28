@@ -124,7 +124,7 @@ class TeacherController extends Controller
         if ($subject->teacher_id !== Auth::id()) {
             abort(403, 'غير مصرح لك بمشاهدة هذه الدورة');
         }
-        $lessons = $subject->lessons()->with('videos')->get();
+        $lessons = $subject->lessons()->with(['videos', 'comments.user', 'evaluations.user'])->get();
         return view('teacher.subjects.show', compact('subject', 'lessons'));
     }
 
@@ -146,7 +146,7 @@ class TeacherController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'video_url' => 'nullable|url',
-            'video_path' => 'nullable|file|mimes:mp4|max:102400', // 100MB
+            'video_path' => 'nullable|file|mimes:mp4|max:102400',
         ]);
 
         $lesson = Lesson::create([
@@ -222,5 +222,43 @@ class TeacherController extends Controller
         }
         $lesson->delete();
         return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم حذف الدرس بنجاح!');
+    }
+
+    public function storeComment(Request $request, Subject $subject, Lesson $lesson)
+    {
+        if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
+            abort(403, 'غير مصرح لك');
+        }
+
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $lesson->comments()->create([
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ]);
+
+        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إضافة التعليق بنجاح!');
+    }
+
+    public function storeEvaluation(Request $request, Subject $subject, Lesson $lesson)
+    {
+        if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
+            abort(403, 'غير مصرح لك');
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|between:1,5',
+            'comment' => 'nullable|string',
+        ]);
+
+        $lesson->evaluations()->create([
+            'user_id' => Auth::id(),
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إضافة التقييم بنجاح!');
     }
 }
