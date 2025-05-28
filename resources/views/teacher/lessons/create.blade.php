@@ -25,8 +25,8 @@
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="video_path" class="block text-sm font-medium text-gray-700">رفع فيديو</label>
-                        <input type="file" name="video_path" id="video_path" class="mt-1 block w-full">
+                        <label for="video_url" class="block text-sm font-medium text-gray-700">رابط الفيديو (YouTube)</label>
+                        <input type="text" name="video_url" id="video_url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://www.youtube.com/watch?v=...">
                         @error('video_url')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror

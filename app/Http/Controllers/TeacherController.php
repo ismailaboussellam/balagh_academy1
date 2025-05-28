@@ -1,13 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Lesson;
 use App\Models\Subject;
 use App\Models\UserTeacher;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 
 class TeacherController extends Controller
@@ -162,7 +163,7 @@ public function storeLesson(Request $request, Subject $subject)
         'description' => $request->description,
     ]);
 
-    if ($request->has('video_url')) {
+    if ($request->filled('video_url')) {
         $lesson->videos()->create([
             'video_url' => $request->video_url,
         ]);
