@@ -15,6 +15,14 @@
         <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')" class="text-gray-700 hover:text-white hover:bg-gray-500 transition rounded px-3 py-2 font-semibold">
             الملف الشخصي
         </x-nav-link>
+
+        {{-- ✅ رابط خاص بالأساتذة فقط --}}
+        @if (auth()->check() && auth()->user()->role === 'teacher')
+            <x-nav-link :href="route('teacher.subjects')" class="text-blue-700 hover:text-white hover:bg-blue-500 transition rounded px-3 py-2 font-semibold">
+                الدورات
+            </x-nav-link>
+        @endif
+
         <form method="POST" action="{{ route('logout') }}" class="inline">
             @csrf
             <x-responsive-nav-link :href="route('logout')"
@@ -23,8 +31,8 @@
                 {{ __('Log Out') }}
             </x-responsive-nav-link>
         </form>
-        
     </div>
+
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-indigo-200">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('student.dashboard')" :active="request()->routeIs('student.dashboard')" class="block text-indigo-700 hover:text-white hover:bg-indigo-500 transition rounded px-3 py-2 font-semibold">
@@ -42,6 +50,14 @@
             <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')" class="block text-gray-700 hover:text-white hover:bg-gray-500 transition rounded px-3 py-2 font-semibold">
                 الملف الشخصي
             </x-responsive-nav-link>
+
+            {{-- ✅ رابط خاص بالأساتذة فقط فالموبايل --}}
+            @if (auth()->check() && auth()->user()->role === 'teacher')
+                <x-responsive-nav-link :href="route('teacher.subjects')" class="block text-blue-700 hover:text-white hover:bg-blue-500 transition rounded px-3 py-2 font-semibold">
+                    الدورات
+                </x-responsive-nav-link>
+            @endif
+
             <form method="POST" action="{{ route('logout') }}" class="inline">
                 @csrf
                 <x-responsive-nav-link :href="route('logout')"
