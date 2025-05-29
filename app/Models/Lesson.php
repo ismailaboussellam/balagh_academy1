@@ -8,8 +8,7 @@ class Lesson extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'teacher_id', 'subject_id','image_path'];
-
+    protected $fillable = ['subject_id', 'teacher_id', 'title', 'description', 'video_url', 'image_path'];
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');

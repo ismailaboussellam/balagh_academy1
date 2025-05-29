@@ -137,40 +137,46 @@ class TeacherController extends Controller
     }
 
     public function storeLesson(Request $request, Subject $subject)
-    {
-        if ($subject->teacher_id !== Auth::id()) {
-            abort(403, 'غير مصرح لك');
-        }
+{
+    if ($subject->teacher_id !== Auth::id()) {
+        abort(403, 'غير مصرح لك');
+    }
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'video_url' => 'nullable|url',
+        'video_path' => 'nullable|file|mimes:mp4,avi,mov|max:614400', // 600MB in KB
+        'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'video_url' => 'nullable|url',
-            'video_path' => 'nullable|file|mimes:mp4|max:102400',
-        ]);
+    $lessonData = [
+        'subject_id' => $subject->id,
+        'teacher_id' => Auth::id(),
+        'title' => $request->title,
+        'description' => $request->description,
+    ];
 
-        $lesson = Lesson::create([
-            'subject_id' => $subject->id,
-            'teacher_id' => Auth::id(),
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
-
-        if ($request->has('video_url') || $request->hasFile('video_path')) {
-            $videoData = [];
-            if ($request->filled('video_url')) {
-                $videoData['video_url'] = $request->video_url;
-            }
-            if ($request->hasFile('video_path')) {
-                $videoData['video_path'] = $request->file('video_path')->store('videos', 'public');
-            }
-            $lesson->videos()->create($videoData);
-        }
-
-        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إنشاء الدرس بنجاح!');
+    if ($request->hasFile('image_path')) {
+        $lessonData['image_path'] = $request->file('image_path')->store('lesson_images', 'public');
     }
 
-    public function editLesson(Subject $subject, Lesson $lesson)
+    $lesson = Lesson::create($lessonData);
+
+    if ($request->has('video_url') || $request->hasFile('video_path')) {
+        $videoData = [];
+        if ($request->filled('video_url')) {
+            $videoData['video_url'] = $request->video_url;
+        }
+        if ($request->hasFile('video_path')) {
+            $videoData['video_path'] = $request->file('video_path')->store('videos', 'public');
+        }
+        $lesson->videos()->create($videoData);
+    }
+
+    return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إنشاء الدرس بنجاح!');
+}
+
+        public function editLesson(Subject $subject, Lesson $lesson)
     {
         if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
             abort(403, 'غير مصرح لك');
@@ -185,11 +191,12 @@ class TeacherController extends Controller
         }
 
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'video_url' => 'nullable|url',
-            'video_path' => 'nullable|file|mimes:mp4|max:102400',
-        ]);
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'video_url' => 'nullable|url',
+        'video_path' => 'nullable|file|mimes:mp4,avi,mov|max:102400',
+        'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
         $lesson->update([
             'title' => $request->title,
@@ -221,45 +228,31 @@ class TeacherController extends Controller
             abort(403, 'غير مصرح لك');
         }
         $lesson->delete();
-        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم حذف الدرس بنجاح!');
+        return redirect()->route('teacher.subjects.show', $subject);
     }
 
     public function storeComment(Request $request, Subject $subject, Lesson $lesson)
     {
-        if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
-            abort(403, 'غير مصرح لك');
-        }
-
-        $request->validate([
-            'content' => 'required|string',
-        ]);
-
+        $request->validate(['content' => 'required|string']);
         $lesson->comments()->create([
             'user_id' => Auth::id(),
             'content' => $request->content,
         ]);
-
-        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إضافة التعليق بنجاح!');
+        return redirect()->route('teacher.lessons.show', [$subject, $lesson]);
     }
 
     public function storeEvaluation(Request $request, Subject $subject, Lesson $lesson)
     {
-        if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
-            abort(403, 'غير مصرح لك');
-        }
-
         $request->validate([
             'rating' => 'required|integer|between:1,5',
             'comment' => 'nullable|string',
         ]);
-
         $lesson->evaluations()->create([
             'user_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
-
-        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إضافة التقييم بنجاح!');
+        return redirect()->route('teacher.lessons.show', [$subject, $lesson]);
     }
     public function showLesson(Subject $subject, Lesson $lesson)
     {

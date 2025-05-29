@@ -18,7 +18,7 @@
 
                 <!-- Modal لإضافة درس -->
                 <dialog id="addLessonModal" class="modal">
-                    <div class="modal-box">
+                    <div class="modal-box w-11/12 max-w-4xl bg-white p-6 rounded-lg shadow-lg">
                         <h3 class="font-bold text-lg mb-4">إضافة درس جديد</h3>
                         <form method="POST" action="{{ route('teacher.lessons.store', $subject) }}" enctype="multipart/form-data">
                             @csrf
@@ -67,16 +67,21 @@
                             @endif
                             <div class="p-4 text-center">
                                 <h4 class="text-md font-semibold text-gray-800 mb-3">{{ $lesson->title }}</h4>
-                                <a href="{{ route('teacher.lessons.show', [$subject, $lesson]) }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
-                                    عرض التفاصيل
-                                </a>
+                                <div class="flex justify-center space-x-2">
+                                    <a href="{{ route('teacher.lessons.show', [$subject, $lesson]) }}" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition duration-300">عرض التفاصيل</a>
+                                    <a href="{{ route('teacher.lessons.edit', [$subject, $lesson]) }}" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition duration-300">تعديل</a>
+                                    <form action="{{ route('teacher.lessons.delete', [$subject, $lesson]) }}" method="POST" class="inline" onsubmit="return confirm('هل أنت متأكد من حذف الدرس؟')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition duration-300">حذف</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @empty
                         <p class="text-gray-600">لا توجد دروس بعد.</p>
                     @endforelse
                 </div>
-
             </div>
         </div>
     </div>
