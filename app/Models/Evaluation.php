@@ -1,5 +1,4 @@
 <?php
-// app/Models/Evaluation.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,15 +8,15 @@ class Evaluation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['student_id', 'lesson_id', 'score'];
+    protected $fillable = ['lesson_id', 'user_id', 'rating', 'comment'];
 
     public function lesson()
     {
         return $this->belongsTo(Lesson::class);
     }
 
-    public function student()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class);
     }
 }

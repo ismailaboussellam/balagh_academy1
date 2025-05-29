@@ -77,7 +77,7 @@
             <a href="{{ route('admin.dashboard') }}">لوحة القيادة</a>
             <a href="{{ route('admin.students') }}">إدارة الطلاب</a>
             <a href="{{ route('admin.filiers') }}">إدارة الشعب</a>
-            <a href="{{ route('admin.cours.index') }}">إدارة المجموعات</a>
+            <a href="{{ route('admin.cours.index') }}">إدارة cours</a>
             <a href="{{ route('admin.teachers') }}">إدارة الأساتذة</a>
             <a href="{{ route('admin.lessons') }}">إدارة الحصص</a>
         </div>

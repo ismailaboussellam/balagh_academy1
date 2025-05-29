@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsTeacher;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // تسجيل middleware خاص بالروتات
         $middleware->alias([
             'is_admin' => IsAdmin::class,
+            'is_teacher' => IsTeacher::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
