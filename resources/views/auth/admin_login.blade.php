@@ -27,13 +27,13 @@
                             required autocomplete="current-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
-
-
 <<<<<<< HEAD
-       <div class="mt-4">
+
+        <div class="mt-4">
 =======
         <div class="mt-4">
->>>>>>> eb953aad3e72bbdfa196aef1ddf7a07fd95d84cc
+
+>>>>>>> cd3fea607f5a7740a1d65aea1f3beab46695dfa3
             <x-input-label for="captcha" :value="__('Verification Code')" />
             <div class="flex items-center gap-4">
                 <div class="bg-gray-100 p-3 rounded-lg text-xl font-bold tracking-wider select-none captcha-display">
@@ -53,11 +53,13 @@
             />
             <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
 <<<<<<< HEAD
-        </div>
-=======
         </div> 
->>>>>>> eb953aad3e72bbdfa196aef1ddf7a07fd95d84cc
+=======
 
+        </div> 
+
+
+>>>>>>> cd3fea607f5a7740a1d65aea1f3beab46695dfa3
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">

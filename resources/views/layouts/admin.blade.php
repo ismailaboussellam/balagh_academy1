@@ -2,6 +2,7 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>لوحة تحكم المدير</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -76,7 +77,7 @@
             <a href="{{ route('admin.dashboard') }}">لوحة القيادة</a>
             <a href="{{ route('admin.students') }}">إدارة الطلاب</a>
             <a href="{{ route('admin.filiers') }}">إدارة الشعب</a>
-            <a href="{{ route('admin.groups') }}">إدارة المجموعات</a>
+            <a href="{{ route('admin.cours.index') }}">إدارة cours</a>
             <a href="{{ route('admin.teachers') }}">إدارة الأساتذة</a>
             <a href="{{ route('admin.lessons') }}">إدارة الحصص</a>
         </div>
@@ -85,5 +86,9 @@
             @yield('content')
         </div>
     </div>
+
+
+    <!-- Add before your other scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
