@@ -29,7 +29,7 @@ class AdminController extends Controller
             return view('admin.filiers');
         }
         public function groups() {
-            return view('admin.groups');
+            return view('admin.cours');
         }
         public function teachers() {
             return view('admin.teachers');
