@@ -11,8 +11,6 @@
 
         <p class="text-gray-700">هنا يمكنك إدارة واجباتك ومتابعة غيابات المتدربين...</p>
 
-        {{-- مستقبلاً تقدر تزيد هنا أقسام بحال: --}}
-        {{-- @include('teacher.sections.stats') --}}
-        {{-- @include('teacher.sections.absences') --}}
+
     </div>
 </x-app-layout>

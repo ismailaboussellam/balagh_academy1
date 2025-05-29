@@ -1,5 +1,4 @@
 <?php
-// app/Models/Lesson.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,5 +23,10 @@ class Lesson extends Model
     public function evaluations()
     {
         return $this->hasMany(Evaluation::class);
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class, 'lesson_id');
     }
 }
