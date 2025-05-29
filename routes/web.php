@@ -12,6 +12,7 @@ use App\Http\Controllers\LessonController;
 
 
 require __DIR__.'/admin.php';
+require __DIR__.'/student.php';
 // صفحات عامة
 Route::view('/', 'pages.home')->name('home');
 Route::view('/system', 'pages.system')->name('system');
