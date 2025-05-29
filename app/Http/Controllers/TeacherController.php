@@ -261,4 +261,11 @@ class TeacherController extends Controller
 
         return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إضافة التقييم بنجاح!');
     }
+    public function showLesson(Subject $subject, Lesson $lesson)
+    {
+        if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
+            abort(403, 'غير مصرح لك');
+        }
+        return view('teacher.lessons.show', compact('subject', 'lesson'));
+    }
 }

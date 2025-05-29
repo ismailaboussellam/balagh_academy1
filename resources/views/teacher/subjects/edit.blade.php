@@ -1,28 +1,42 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            تعديل الدورة: {{ $subject->name }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <form method="POST" action="{{ route('teacher.subjects.update', $subject) }}">
-                    @csrf
-                    @method('PUT')
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">اسم الدورة</label>
-                        <input type="text" name="name" id="name" value="{{ $subject->name }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-                        @error('name')
-                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">
-                        تحديث الدورة
-                    </button>
-                </form>
+<!-- Modal لتعديل الدرس -->
+<dialog id="editLessonModal" class="modal" open>
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">تعديل الدرس: {{ $lesson->title }}</h3>
+        <form method="POST" action="{{ route('teacher.lessons.update', [$subject, $lesson]) }}" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="mb-4">
+                <label for="title" class="block text-sm font-medium text-gray-700">العنوان</label>
+                <input type="text" name="title" id="title" value="{{ $lesson->title }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                @error('title')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
             </div>
-        </div>
+            <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">الوصف</label>
+                <textarea name="description" id="description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">{{ $lesson->description }}</textarea>
+                @error('description')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <label for="video_url" class="block text-sm font-medium text-gray-700">رابط الفيديو (YouTube)</label>
+                <input type="text" name="video_url" id="video_url" value="{{ $lesson->videos->first()->video_url ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://www.youtube.com/watch?v=...">
+                @error('video_url')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <label for="video_path" class="block text-sm font-medium text-gray-700">رفع فيديو (اختياري)</label>
+                <input type="file" name="video_path" id="video_path" class="mt-1 block w-full">
+                @error('video_path')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="modal-action">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">تحديث الدرس</button>
+                <a href="{{ route('teacher.subjects.show', $subject) }}" class="bg-gray-600 text-white px-4 py-2 rounded">إلغاء</a>
+            </div>
+        </form>
     </div>
-</x-app-layout>
+</dialog>

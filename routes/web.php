@@ -71,6 +71,7 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::delete('/subjects/{subject}/lessons/{lesson}', [TeacherController::class, 'deleteLesson'])->name('teacher.lessons.delete');
     Route::post('/subjects/{subject}/lessons/{lesson}/comments', [TeacherController::class, 'storeComment'])->name('teacher.comments.store');
     Route::post('/subjects/{subject}/lessons/{lesson}/evaluations', [TeacherController::class, 'storeEvaluation'])->name('teacher.evaluations.store');
+    Route::get('/subjects/{subject}/lessons/{lesson}', [TeacherController::class, 'showLesson'])->name('teacher.lessons.show');
 });
 
 
