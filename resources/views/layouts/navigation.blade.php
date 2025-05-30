@@ -15,13 +15,17 @@
         <!-- الدروس -->
         @if (auth()->check() && auth()->user()->role === 'teacher')
             @php
-                // جلب أول Subject أو رابط بديل
                 $subject = App\Models\Subject::first();
-                $lessonsLink = $subject ? route('teacher.lessons.create', $subject->id) : route('teacher.subjects');
             @endphp
-            <x-nav-link :href="$lessonsLink" :active="request()->routeIs('teacher.lessons.create')" class="text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
-                إضافة درس
-            </x-nav-link>
+            @if ($subject)
+                <x-nav-link :href="route('teacher.lessons.create', $subject->id)" :active="request()->routeIs('teacher.lessons.create')" class="text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
+                    إضافة درس
+                </x-nav-link>
+            @else
+                <x-nav-link :href="route('teacher.subjects')" :active="request()->routeIs('teacher.subjects.*')" class="text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
+                    إضافة درس (أنشئ مادة أولاً)
+                </x-nav-link>
+            @endif
         @elseif (auth()->check() && auth()->user()->role === 'student')
             <x-nav-link :href="route('lessons.index')" :active="request()->routeIs('lessons.*')" class="text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
                 الدروس
@@ -30,12 +34,15 @@
 
         <!-- الامتحانات -->
         @if (auth()->check() && auth()->user()->role === 'teacher')
-            @php
-                $examsLink = $subject ? route('teacher.exams.create', $subject->id) : route('teacher.subjects');
-            @endphp
-            <x-nav-link :href="$examsLink" :active="request()->routeIs('teacher.exams.create')" class="text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
-                إضافة امتحان
-            </x-nav-link>
+            @if ($subject)
+                <x-nav-link :href="route('teacher.exams.create', $subject->id)" :active="request()->routeIs('teacher.exams.create')" class="text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
+                    إضافة امتحان
+                </x-nav-link>
+            @else
+                <x-nav-link :href="route('teacher.subjects')" :active="request()->routeIs('teacher.subjects.*')" class="text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
+                    إضافة امتحان (أنشئ مادة أولاً)
+                </x-nav-link>
+            @endif
         @elseif (auth()->check() && auth()->user()->role === 'student')
             <x-nav-link :href="route('exams.index')" :active="request()->routeIs('exams.*')" class="text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
                 الامتحانات
@@ -92,9 +99,15 @@
 
             <!-- الدروس -->
             @if (auth()->check() && auth()->user()->role === 'teacher')
-                <x-responsive-nav-link :href="$lessonsLink" :active="request()->routeIs('teacher.lessons.create')" class="block text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
-                    إضافة درس
-                </x-responsive-nav-link>
+                @if ($subject)
+                    <x-responsive-nav-link :href="route('teacher.lessons.create', $subject->id)" :active="request()->routeIs('teacher.lessons.create')" class="block text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
+                        إضافة درس
+                    </x-responsive-nav-link>
+                @else
+                    <x-responsive-nav-link :href="route('teacher.subjects')" :active="request()->routeIs('teacher.subjects.*')" class="block text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
+                        إضافة درس (أنشئ مادة أولاً)
+                    </x-responsive-nav-link>
+                @endif
             @elseif (auth()->check() && auth()->user()->role === 'student')
                 <x-responsive-nav-link :href="route('lessons.index')" :active="request()->routeIs('lessons.*')" class="block text-green-700 hover:text-white hover:bg-green-500 transition rounded px-3 py-2 font-semibold">
                     الدروس
@@ -103,9 +116,15 @@
 
             <!-- الامتحانات -->
             @if (auth()->check() && auth()->user()->role === 'teacher')
-                <x-responsive-nav-link :href="$examsLink" :active="request()->routeIs('teacher.exams.create')" class="block text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
-                    إضافة امتحان
-                </x-responsive-nav-link>
+                @if ($subject)
+                    <x-responsive-nav-link :href="route('teacher.exams.create', $subject->id)" :active="request()->routeIs('teacher.exams.create')" class="block text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
+                        إضافة امتحان
+                    </x-responsive-nav-link>
+                @else
+                    <x-responsive-nav-link :href="route('teacher.subjects')" :active="request()->routeIs('teacher.subjects.*')" class="block text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
+                        إضافة امتحان (أنشئ مادة أولاً)
+                    </x-responsive-nav-link>
+                @endif
             @elseif (auth()->check() && auth()->user()->role === 'student')
                 <x-responsive-nav-link :href="route('exams.index')" :active="request()->routeIs('exams.*')" class="block text-yellow-700 hover:text-white hover:bg-yellow-500 transition rounded px-3 py-2 font-semibold">
                     الامتحانات

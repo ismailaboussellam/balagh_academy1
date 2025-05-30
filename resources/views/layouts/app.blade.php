@@ -32,13 +32,8 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen flex flex-col">
-            @try
-                @include('layouts.navigation')
-            @catch(\Exception $e)
-                <nav class="bg-red-100 p-4 text-red-700">
-                    خطأ في تحميل القائمة الرئيسية. التفاصيل: {{ $e->getMessage() }}
-                </nav>
-            @endtry
+            <!-- Include Navigation without try-catch -->
+            @include('layouts.navigation')
 
             <!-- Page Heading -->
             @isset($header)

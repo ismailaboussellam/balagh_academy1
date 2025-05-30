@@ -75,6 +75,7 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     // إضافة إدارة الامتحانات للأستاذ
     Route::get('/subjects/{subject}/exams/create', [TeacherController::class, 'createExam'])->name('teacher.exams.create');
     Route::post('/subjects/{subject}/exams', [TeacherController::class, 'storeExam'])->name('teacher.exams.store');
+    Route::get('/teacher/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
 });
 
 // تحميل صورة الملف الشخصي
