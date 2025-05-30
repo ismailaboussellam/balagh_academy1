@@ -13,7 +13,17 @@
         <!-- ستايل إضافي للـ body -->
         <style>
             body {
-                background: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 100%);
+                @if (auth()->check())
+                    @if (auth()->user()->role === 'student')
+                        background: linear-gradient(135deg, #f0f9ff 0%, #e6fffa 100%);
+                    @elseif (auth()->user()->role === 'teacher')
+                        background: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 100%);
+                    @else
+                        background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
+                    @endif
+                @else
+                    background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
+                @endif
                 min-height: 100vh;
             }
         </style>
@@ -22,7 +32,13 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen flex flex-col">
-            @include('layouts.navigation')
+            @try
+                @include('layouts.navigation')
+            @catch(\Exception $e)
+                <nav class="bg-red-100 p-4 text-red-700">
+                    خطأ في تحميل القائمة الرئيسية. التفاصيل: {{ $e->getMessage() }}
+                </nav>
+            @endtry
 
             <!-- Page Heading -->
             @isset($header)
@@ -40,7 +56,7 @@
                 </div>
             </main>
             <footer class="text-center text-xs text-gray-400 py-4">
-                &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. جميع الحقوق محفوظة.
+                © {{ date('Y') }} {{ config('app.name', 'Laravel') }}. جميع الحقوق محفوظة.
             </footer>
         </div>
     </body>

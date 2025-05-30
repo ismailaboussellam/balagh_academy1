@@ -10,9 +10,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LessonController;
 
-
 require __DIR__.'/admin.php';
 require __DIR__.'/student.php';
+
 // صفحات عامة
 Route::view('/', 'pages.home')->name('home');
 Route::view('/system', 'pages.system')->name('system');
@@ -53,7 +53,6 @@ Route::post('student/register', [StudentController::class, 'register'])->name('s
 
 // لوحة تحكم الطالب
 Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
-//Route::get('teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
 
 // لوحة تحكم الاستاذ وإدارة الدورات
 Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () {
@@ -73,10 +72,10 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::post('/subjects/{subject}/lessons/{lesson}/comments', [TeacherController::class, 'storeComment'])->name('teacher.comments.store');
     Route::post('/subjects/{subject}/lessons/{lesson}/evaluations', [TeacherController::class, 'storeEvaluation'])->name('teacher.evaluations.store');
     Route::get('/subjects/{subject}/lessons/{lesson}', [TeacherController::class, 'showLesson'])->name('teacher.lessons.show');
+    // إضافة إدارة الامتحانات للأستاذ
+    Route::get('/subjects/{subject}/exams/create', [TeacherController::class, 'createExam'])->name('teacher.exams.create');
+    Route::post('/subjects/{subject}/exams', [TeacherController::class, 'storeExam'])->name('teacher.exams.store');
 });
-
-
-
 
 // تحميل صورة الملف الشخصي
 Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');

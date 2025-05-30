@@ -261,4 +261,42 @@ class TeacherController extends Controller
         }
         return view('teacher.lessons.show', compact('subject', 'lesson'));
     }
+    public function index()
+{
+    return view('lessons.index');
+}
+
+public function indexExams()
+{
+    return view('exams.index');
+}
+
+public function indexNotifications()
+{
+    return view('notifications.index');
+}
+public function createExam($subject)
+{
+    return view('teacher.exams.create', compact('subject'));
+}
+
+public function storeExam(Request $request, $subject)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'exam_date' => 'required|date',
+        'description' => 'nullable|string',
+    ]);
+
+    // إنشاء الامتحان في قاعدة البيانات
+    $exam = new Exam(); // تأكدي أن الموديل Exam موجود
+    $exam->subject_id = $subject;
+    $exam->title = $validated['title'];
+    $exam->exam_date = $validated['exam_date'];
+    $exam->description = $validated['description'];
+    $exam->teacher_id = auth()->id(); // ربط الامتحان بالأستاذ
+    $exam->save();
+
+    return redirect()->route('teacher.subjects.show', $subject)->with('success', 'تم إضافة الامتحان بنجاح!');
+}
 }
