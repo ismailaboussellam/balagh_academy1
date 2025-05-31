@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FatherController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\CoursFrontController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\LessonController;
+
 
 
 require __DIR__.'/admin.php';
@@ -74,7 +76,17 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
 });
 
 
+// Add these routes to your web.php file
+// ... other routes ...
 
+
+
+
+
+Route::get('/cours', [CoursFrontController::class, 'index'])->name('cours.index');
+Route::get('/cours/{id}/details', [CoursFrontController::class, 'details'])->name('cours.details');
+Route::get('/cours/{id}/learn', [CoursFrontController::class, 'learn'])->name('cours.learn');
+Route::post('/cours/{id}/payment', [CoursFrontController::class, 'payment'])->name('cours.payment');
 
 // تحميل صورة الملف الشخصي
 Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');

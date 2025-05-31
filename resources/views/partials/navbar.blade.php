@@ -1,3 +1,7 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        @yield('styles')
+        @stack('styles')
 <nav x-data="{ open: false }" class="bg-white shadow sticky top-0 z-50" dir="rtl">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -36,6 +40,10 @@
                    class="{{ request()->routeIs('system') ? 'text-green-700 font-semibold border-b-2 border-green-700 pb-1' : 'text-gray-700 hover:text-green-700 transition ml-3' }}">
                     النظام الأكاديمي
                 </a>
+                <a href="{{ route('cours.index') }}"
+                   class="{{ request()->routeIs('system') ? 'text-green-700 font-semibold border-b-2 border-green-700 pb-1' : 'text-gray-700 hover:text-green-700 transition ml-3' }}">
+                    الدورات
+                </a>
 
                 <a href="{{ route('contact_us') }}"
                    class="{{ request()->routeIs('contact_us') ? 'text-green-700 font-semibold border-b-2 border-green-700 pb-1' : 'text-gray-700 hover:text-green-700 transition ml-3' }}">
@@ -46,6 +54,8 @@
                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition ml-4">
                     تسجيل الدخول
                 </a>
+                
+
             </div>
 
             <!-- Mobile Button -->
@@ -175,3 +185,5 @@
         });
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@stack('scripts') 

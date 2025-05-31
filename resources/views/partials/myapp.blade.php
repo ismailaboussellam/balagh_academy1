@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 <!-- AOS Animations -->
@@ -24,6 +25,8 @@
 <!-- Your app CSS -->
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
+
+
 <style>
     body {
             font-family: 'Tajawal', sans-serif;
@@ -32,6 +35,7 @@
         }
 
 </style>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
     <body class="font-sans antialiased text-right rtl">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -43,5 +47,8 @@
 
             @include('partials.footer')
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@stack('scripts') 
+
     </body>
 </html>
