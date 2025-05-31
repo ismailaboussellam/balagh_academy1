@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- فورم إضافة الامتحان -->
-                    <form method="POST" action="{{ route('teacher.exams.store', $subject) }}">
+                    <form method="POST" action="{{ route('teacher.exams.store', $subject) }}" enctype="multipart/form-data">
                         @csrf
 
                         <!-- عنوان الامتحان -->
@@ -43,8 +43,21 @@
                             @enderror
                         </div>
 
-                        <!-- زر الإرسال -->
-                        <div class="flex justify-end">
+                        <!-- حقل رفع الوثيقة (اختياري) -->
+                        <div class="mb-4">
+                            <label for="document" class="block text-sm font-medium text-gray-700">رفع وثيقة الامتحان (اختياري)</label>
+                            <input type="file" name="document" id="document" class="mt-1 block w-full" accept=".pdf,.doc,.docx">
+                            @error('document')
+                                <span class="text-red-600 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- أزرار الإرسال وعرض الامتحانات -->
+                        <div class="flex justify-end space-x-4">
+                            <a href="{{ route('teacher.exams') }}"
+                            class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                عرض الامتحانات
+                            </a>
                             <button type="submit"
                                     class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 إضافة الامتحان

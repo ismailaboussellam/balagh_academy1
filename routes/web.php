@@ -23,8 +23,9 @@ Route::view('/privacy-policy', 'legal.privacy-policy')->name('privacy.policy');
 Route::view('/terms-conditions', 'legal.terms-conditions')->name('terms.conditions');
 
 // دروس وامتحانات وإشعارات (عرض فقط)
+// نغير /exams ليستدعي الميثود indexExams بدل View مباشرة
+Route::get('/exams', [TeacherController::class, 'indexExams'])->name('exams.index');
 Route::view('/lessons', 'lessons.index')->name('lessons.index');
-Route::view('/exams', 'exams.index')->name('exams.index');
 Route::view('/notifications', 'notifications.index')->name('notifications.index');
 
 // تسجيل الدخول واختيار نوع المستخدم
@@ -57,6 +58,8 @@ Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('
 // لوحة تحكم الاستاذ وإدارة الدورات
 Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () {
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    // نغير /exams ليستدعي الميثود indexExams بدل تكرار
+    Route::get('/exams', [TeacherController::class, 'indexExams'])->name('teacher.exams');
     Route::get('/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
     Route::get('/subjects/create', [TeacherController::class, 'createSubject'])->name('teacher.subjects.create');
     Route::post('/subjects', [TeacherController::class, 'storeSubject'])->name('teacher.subjects.store');
@@ -75,6 +78,10 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     // إضافة إدارة الامتحانات للأستاذ
     Route::get('/subjects/{subject}/exams/create', [TeacherController::class, 'createExam'])->name('teacher.exams.create');
     Route::post('/subjects/{subject}/exams', [TeacherController::class, 'storeExam'])->name('teacher.exams.store');
+    Route::get('/subjects/{subject}/exams/{exam}/edit', [TeacherController::class, 'editExam'])->name('teacher.exams.edit');
+    Route::put('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'updateExam'])->name('teacher.exams.update');
+    Route::delete('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'destroyExam'])->name('teacher.exams.destroy');
+    Route::get('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'showExam'])->name('teacher.exams.show');
     Route::get('/teacher/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
 });
 

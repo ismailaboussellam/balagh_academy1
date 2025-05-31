@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <form method="POST" action="{{ route('teacher.subjects.store') }}">
+                <form method="POST" action="{{ route('teacher.subjects.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700">اسم الدورة</label>
@@ -17,7 +17,16 @@
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">
+
+                    <div class="mb-4">
+                        <label for="image" class="block text-sm font-medium text-gray-700">صورة الدورة</label>
+                        <input type="file" name="image" id="image" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        @error('image')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition duration-200">
                         حفظ الدورة
                     </button>
                 </form>
