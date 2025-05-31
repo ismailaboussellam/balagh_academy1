@@ -1,4 +1,5 @@
-<x-app-layout>
+@extends('student.app.app')
+@section('content')
 <div class="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-green-100 py-10 px-2">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- القسم الرئيسي -->
@@ -169,4 +170,4 @@
         </div>
     </div>
 </div>
-</x-app-layout>
+@endsection

@@ -36,11 +36,28 @@
                         @enderror
                     </div>
 
-                    {{-- حقل رفع الفيديو المحلي --}}
                     <div class="mb-4">
                         <label for="video_path" class="block text-sm font-medium text-gray-700">رفع فيديو (mp4)</label>
                         <input type="file" name="video_path" id="video_path" class="mt-1 block w-full">
                         @error('video_path')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- حقل رفع الوثيقة (اختياري) -->
+                    <div class="mb-4">
+                        <label for="document" class="block text-sm font-medium text-gray-700">رفع وثيقة (اختياري)</label>
+                        <input type="file" name="document" id="document" class="mt-1 block w-full" accept=".pdf,.doc,.docx">
+                        @error('document')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- حقل رفع الصورة (اختياري) -->
+                    <div class="mb-4">
+                        <label for="image" class="block text-sm font-medium text-gray-700">رفع صورة (اختياري)</label>
+                        <input type="file" name="image" id="image" class="mt-1 block w-full" accept="image/*">
+                        @error('image')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
                     </div>

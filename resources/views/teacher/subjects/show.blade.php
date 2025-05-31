@@ -8,115 +8,80 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold mb-4">{{ $subject->name }}</h3>
+                <h3 class="text-lg font-bold mb-6">{{ $subject->name }}</h3>
 
-                {{-- ✅ زر إضافة درس جديد --}}
-                <div class="mb-4">
-                    <a href="{{ route('teacher.lessons.create', ['subject' => $subject->id]) }}"
-                       class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow">
-                        + إضافة درس جديد
-                    </a>
-                </div>
+                <!-- زر إضافة درس -->
+                <button class="bg-indigo-600 text-white px-4 py-2 rounded mb-6 hover:bg-indigo-700 transition duration-300"
+                    onclick="document.getElementById('addLessonModal').showModal()">
+                    + إضافة درس جديد
+                </button>
 
-                <h4 class="text-md font-semibold mb-2">الدروس</h4>
-                <table class="w-full text-sm text-right">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">العنوان</th>
-                            <th scope="col" class="px-6 py-3">الوصف</th>
-                            <th scope="col" class="px-6 py-3">رابط الفيديو</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($lessons as $lesson)
-                            <tr class="bg-white border-b">
-                                <td class="px-6 py-4">{{ $lesson->title }}</td>
-                                <td class="px-6 py-4">{{ $lesson->description ?? 'لا يوجد وصف' }}</td>
-                                <td class="px-6 py-4">
-                                    @if ($lesson->videos->count())
-                                        @foreach ($lesson->videos as $video)
-                                            @if ($video->video_path)
-                                                <video width="320" height="240" controls class="mb-2">
-                                                    <source src="{{ asset('storage/' . $video->video_path) }}" type="video/mp4">
-                                                    المتصفح لا يدعم تشغيل الفيديو.
-                                                </video>
-                                            @elseif ($video->video_url)
-                                                <a href="{{ $video->video_url }}" class="text-indigo-600 hover:underline" target="_blank">مشاهدة</a>
-                                            @endif
-                                            <br>
-                                        @endforeach
-                                    @else
-                                        لا يوجد فيديو
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                {{-- ✅ قسم التعليقات والتقييمات --}}
-                <div class="mt-6">
-                    <h4 class="text-md font-semibold mb-2">التعليقات والتقييمات</h4>
-                    @foreach ($lessons as $lesson)
-                        <div class="mb-4 p-4 bg-gray-100 rounded">
-                            <h5 class="font-bold">{{ $lesson->title }}</h5>
-
-                            {{-- التعليقات --}}
-                            <div class="mt-2">
-                                <h6 class="font-semibold">التعليقات:</h6>
-                                @if ($lesson->comments->count())
-                                    @foreach ($lesson->comments as $comment)
-                                        <p class="text-sm">{{ $comment->user->first_name }} {{ $comment->user->last_name }}: {{ $comment->content }}</p>
-                                    @endforeach
-                                @else
-                                    <p class="text-sm">لا توجد تعليقات</p>
-                                @endif
-                                <form action="{{ route('teacher.comments.store', [$subject, $lesson]) }}" method="POST" class="mt-2">
-                                    @csrf
-                                    <textarea name="content" class="w-full rounded-md border-gray-300 shadow-sm" placeholder="أضف تعليقًا"></textarea>
-                                    @error('content')
-                                        <span class="text-red-600 text-sm">{{ $message }}</span>
-                                    @enderror
-                                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded mt-2">إضافة تعليق</button>
-                                </form>
+                <!-- Modal لإضافة درس -->
+                <dialog id="addLessonModal" class="modal">
+                    <div class="modal-box w-11/12 max-w-4xl bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="font-bold text-lg mb-4">إضافة درس جديد</h3>
+                        <form method="POST" action="{{ route('teacher.lessons.store', $subject) }}" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="title" class="block text-sm font-medium text-gray-700">العنوان</label>
+                                <input type="text" name="title" id="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+                                @error('title') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             </div>
+                            <div class="mb-4">
+                                <label for="description" class="block text-sm font-medium text-gray-700">الوصف</label>
+                                <textarea name="description" id="description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                                @error('description') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="video_url" class="block text-sm font-medium text-gray-700">رابط الفيديو (YouTube)</label>
+                                <input type="text" name="video_url" id="video_url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="https://www.youtube.com/watch?v=...">
+                                @error('video_url') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="video_path" class="block text-sm font-medium text-gray-700">رفع فيديو (اختياري)</label>
+                                <input type="file" name="video_path" id="video_path" class="mt-1 block w-full text-gray-700">
+                                @error('video_path') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="image_path" class="block text-sm font-medium text-gray-700">صورة الدرس (اختياري)</label>
+                                <input type="file" name="image_path" id="image_path" class="mt-1 block w-full text-gray-700" accept="image/*">
+                                @error('image_path') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="modal-action">
+                                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">حفظ الدرس</button>
+                                <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700" onclick="document.getElementById('addLessonModal').close()">إلغاء</button>
+                            </div>
+                        </form>
+                    </div>
+                </dialog>
 
-                            {{-- التقييمات --}}
-                            <div class="mt-4">
-                                <h6 class="font-semibold">التقييمات:</h6>
-                                @if ($lesson->evaluations->count())
-                                    @foreach ($lesson->evaluations as $evaluation)
-                                        <p class="text-sm">{{ $evaluation->user->first_name }} {{ $evaluation->user->last_name }}: {{ $evaluation->rating }}/5 - {{ $evaluation->comment ?? 'لا يوجد تعليق' }}</p>
-                                    @endforeach
-                                @else
-                                    <p class="text-sm">لا توجد تقييمات</p>
-                                @endif
-                                <form action="{{ route('teacher.evaluations.store', [$subject, $lesson]) }}" method="POST" class="mt-2">
-                                    @csrf
-                                    <select name="rating" class="rounded-md border-gray-300 shadow-sm">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                    <textarea name="comment" class="w-full rounded-md border-gray-300 shadow-sm mt-2" placeholder="أضف تعليقًا (اختياري)"></textarea>
-                                    @error('rating')
-                                        <span class="text-red-600 text-sm">{{ $message }}</span>
-                                    @enderror
-                                    @error('comment')
-                                        <span class="text-red-600 text-sm">{{ $message }}</span>
-                                    @enderror
-                                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded mt-2">إضافة تقييم</button>
-                                </form>
+                <!-- عرض الدروس كـ Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @forelse ($lessons as $lesson)
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                            <!-- صورة الدرس -->
+                            @if ($lesson->image_path)
+                                <img src="{{ asset('storage/' . $lesson->image_path) }}" alt="{{ $lesson->title }}" class="w-full h-48 object-cover">
+                            @else
+                                <img src="{{ asset('storage/lesson_images/default.jpg') }}" alt="{{ $lesson->title }}" class="w-full h-48 object-cover">
+                            @endif
+                            <div class="p-4 text-center">
+                                <h4 class="text-md font-semibold text-gray-800 mb-3">{{ $lesson->title }}</h4>
+                                <div class="flex justify-center space-x-2">
+                                    <a href="{{ route('teacher.lessons.show', [$subject, $lesson]) }}" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition duration-300">عرض التفاصيل</a>
+                                    <a href="{{ route('teacher.lessons.edit', [$subject, $lesson]) }}" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition duration-300">تعديل</a>
+                                    <form action="{{ route('teacher.lessons.delete', [$subject, $lesson]) }}" method="POST" class="inline" onsubmit="return confirm('هل أنت متأكد من حذف الدرس؟')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition duration-300">حذف</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <p class="text-gray-600">لا توجد دروس بعد.</p>
+                    @endforelse
                 </div>
-
-                <a href="{{ route('teacher.subjects') }}" class="bg-gray-600 text-white px-4 py-2 rounded mt-4 inline-block">
-                    رجوع إلى قائمة الدورات
-                </a>
             </div>
         </div>
     </div>

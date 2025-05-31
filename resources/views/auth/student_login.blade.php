@@ -28,9 +28,6 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-
-
-        <div class="mt-4">
             <x-input-label for="captcha" :value="__('Verification Code')" />
             <div class="flex items-center gap-4">
                 <div class="bg-gray-100 p-3 rounded-lg text-xl font-bold tracking-wider select-none captcha-display">
@@ -49,9 +46,6 @@
                 name="captcha"
             />
             <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
-
-        </div> 
-
 
         <!-- Remember Me -->
         <div class="block mt-4">

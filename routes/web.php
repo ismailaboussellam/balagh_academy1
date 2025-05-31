@@ -12,8 +12,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
-
 require __DIR__.'/admin.php';
+require __DIR__.'/student.php';
+
 // صفحات عامة
 Route::view('/', 'pages.home')->name('home');
 Route::view('/system', 'pages.system')->name('system');
@@ -24,8 +25,9 @@ Route::view('/privacy-policy', 'legal.privacy-policy')->name('privacy.policy');
 Route::view('/terms-conditions', 'legal.terms-conditions')->name('terms.conditions');
 
 // دروس وامتحانات وإشعارات (عرض فقط)
+// نغير /exams ليستدعي الميثود indexExams بدل View مباشرة
+Route::get('/exams', [TeacherController::class, 'indexExams'])->name('exams.index');
 Route::view('/lessons', 'lessons.index')->name('lessons.index');
-Route::view('/exams', 'exams.index')->name('exams.index');
 Route::view('/notifications', 'notifications.index')->name('notifications.index');
 
 // تسجيل الدخول واختيار نوع المستخدم
@@ -54,11 +56,12 @@ Route::post('student/register', [StudentController::class, 'register'])->name('s
 
 // لوحة تحكم الطالب
 Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
-//Route::get('teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
 
 // لوحة تحكم الاستاذ وإدارة الدورات
 Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () {
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    // نغير /exams ليستدعي الميثود indexExams بدل تكرار
+    Route::get('/exams', [TeacherController::class, 'indexExams'])->name('teacher.exams');
     Route::get('/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
     Route::get('/subjects/create', [TeacherController::class, 'createSubject'])->name('teacher.subjects.create');
     Route::post('/subjects', [TeacherController::class, 'storeSubject'])->name('teacher.subjects.store');
@@ -73,11 +76,18 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::delete('/subjects/{subject}/lessons/{lesson}', [TeacherController::class, 'deleteLesson'])->name('teacher.lessons.delete');
     Route::post('/subjects/{subject}/lessons/{lesson}/comments', [TeacherController::class, 'storeComment'])->name('teacher.comments.store');
     Route::post('/subjects/{subject}/lessons/{lesson}/evaluations', [TeacherController::class, 'storeEvaluation'])->name('teacher.evaluations.store');
+    Route::get('/subjects/{subject}/lessons/{lesson}', [TeacherController::class, 'showLesson'])->name('teacher.lessons.show');
+    // إضافة إدارة الامتحانات للأستاذ
+    Route::get('/subjects/{subject}/exams/create', [TeacherController::class, 'createExam'])->name('teacher.exams.create');
+    Route::post('/subjects/{subject}/exams', [TeacherController::class, 'storeExam'])->name('teacher.exams.store');
+    Route::get('/subjects/{subject}/exams/{exam}/edit', [TeacherController::class, 'editExam'])->name('teacher.exams.edit');
+    Route::put('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'updateExam'])->name('teacher.exams.update');
+    Route::delete('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'destroyExam'])->name('teacher.exams.destroy');
+    Route::get('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'showExam'])->name('teacher.exams.show');
+    Route::get('/teacher/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
 });
 
 
-// Add these routes to your web.php file
-// ... other routes ...
 
 
 
@@ -87,6 +97,7 @@ Route::get('/cours', [CoursFrontController::class, 'index'])->name('cours.index'
 Route::get('/cours/{id}/details', [CoursFrontController::class, 'details'])->name('cours.details');
 Route::get('/cours/{id}/learn', [CoursFrontController::class, 'learn'])->name('cours.learn');
 Route::post('/cours/{id}/payment', [CoursFrontController::class, 'payment'])->name('cours.payment');
+
 
 // تحميل صورة الملف الشخصي
 Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');

@@ -18,7 +18,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('teacher_id');
             $table->foreignId('subject_id')->constrained('subjects');
+            $table->string('image_path')->nullable();
             $table->timestamps();
+            //
 
             // Add the foreign key constraint separately with onDelete cascade
             $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');

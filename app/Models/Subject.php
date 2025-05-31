@@ -8,7 +8,7 @@ class Subject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'teacher_id'];
+    protected $fillable = ['teacher_id', 'name', 'image_path'];
 
     public function teacher()
     {

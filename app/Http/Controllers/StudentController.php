@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Auth\Events\Registered;
+use App\Models\Lesson;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class StudentController extends Controller
 {
@@ -47,4 +48,34 @@ class StudentController extends Controller
     public function dashboard() {
         return view('dashboard.student_dashboard');
     }
+
+
+    public function lessons()
+    {
+        // Fetch lessons from database (example)
+        $lessons = Lesson::latest()->get(); // ولا دير where() إلا عندك ربط بمستوى أو فيئة معينة
+        return view('student.student_lesson', compact('lessons'));
+    }
+
+    public function showLesson($id)
+    {
+        $lesson = Lesson::findOrFail($id);
+        return view('student.lesson_show', compact('lesson'));
+    }
+
+
+    public function exams()
+    {
+        // Fetch exams from database (example)
+        // $exams = Exam::where('student_id', auth()->id())->get();
+        return view('student.student_exam');
+    }
+
+    public function notifications()
+    {
+        // Fetch notifications from database (example)
+        // $notifications = Notification::where('student_id', auth()->id())->get();
+        return view('student.student_notification');
+    }
+
 }

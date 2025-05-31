@@ -10,34 +10,19 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        
         <!-- ستايل إضافي للـ body -->
         <style>
             body {
-                @if (auth()->check())
-                    @if (auth()->user()->role === 'student')
-                        background: linear-gradient(135deg, #f0f9ff 0%, #e6fffa 100%);
-                    @elseif (auth()->user()->role === 'teacher')
-                        background: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 100%);
-                    @else
-                        background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
-                    @endif
-                @else
-                    background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
-                @endif
+                background: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 100%);
                 min-height: 100vh;
             }
         </style>
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen flex flex-col">
-            <!-- Include Navigation without try-catch -->
-            @include('layouts.navigation')
+            @include('student.app.navigation')
 
             <!-- Page Heading -->
             @isset($header)
@@ -51,17 +36,12 @@
             <!-- Page Content -->
             <main class="flex-1">
                 <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6">
-                    {{ $slot }}
+                    @yield('content')
                 </div>
             </main>
             <footer class="text-center text-xs text-gray-400 py-4">
-                © {{ date('Y') }} {{ config('app.name', 'Laravel') }}. جميع الحقوق محفوظة.
+                &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. جميع الحقوق محفوظة.
             </footer>
         </div>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-@stack('scripts') <!-- هنا خاص يكون الـ scripts ديالك -->
-    </body>  
+    </body>
 </html>
