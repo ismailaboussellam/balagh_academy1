@@ -9,17 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up()
-{
-    Schema::table('subjects', function (Blueprint $table) {
-        $table->string('image_path')->nullable()->after('name');
-    });
-}
+    public function up()
+    {
+        Schema::table('subjects', function (Blueprint $table) {
+            $table->string('image_path')->nullable()->after('name');
+        });
+    }
 
-public function down()
-{
-    Schema::table('subjects', function (Blueprint $table) {
-        $table->dropColumn('image_path');
-    });
-}
+    public function down()
+    {
+        Schema::table('subjects', function (Blueprint $table) {
+            $table->dropColumn('image_path');
+        });
+    }
 };
