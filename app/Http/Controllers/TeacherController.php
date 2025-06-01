@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Exam;
 use App\Models\User;
 use App\Models\Lesson;
+use App\Models\Comment;
 use App\Models\Subject;
 use App\Models\UserTeacher;
 use Illuminate\Http\Request;
@@ -419,4 +420,35 @@ public function destroyExam($subject, Exam $exam)
     $exam->delete();
     return redirect()->route('teacher.exams')->with('success', 'تم حذف الامتحان بنجاح!');
 }
+
+// Affichage des commantaire
+public function showLessonComments($subjectId, $lessonId)
+{
+    $lesson = Lesson::where('subject_id', $subjectId)->findOrFail($lessonId);
+    if ($lesson->teacher_id !== Auth::id()) {
+        abort(403, 'غير مصرح لك بمشاهدة هذه التعليقات');
+    }
+
+    $comments = $lesson->comments()->with('user')->get();
+
+    return view('teacher.subjects.lesson_comments', compact('lesson', 'comments'));
+}
+
+public function replyToComment(Request $request, $commentId)
+{
+    $comment = Comment::findOrFail($commentId);
+    if ($comment->lesson->teacher_id !== Auth::id()) {
+        abort(403, 'غير مصرح لك بالرد على هذا التعليق');
+    }
+
+    $request->validate([
+        'response' => 'required|string|max:1000',
+    ]);
+
+    $comment->update(['teacher_response' => $request->response]);
+
+    return redirect()->back()->with('success', 'تم إرسال الرد بنجاح!');
+}
+
+
 }
