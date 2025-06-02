@@ -25,9 +25,9 @@ class AdminController extends Controller
         public function students() {
             return view('admin.students');
         }
-        public function filiers() {
-            return view('admin.filiers');
-        }
+        // public function filiers() {
+        //     return view('admin.filiers');
+        // }
         public function groups() {
             return view('admin.cours');
         }

@@ -8,7 +8,7 @@ class Cours extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'presentation' , 'type', 'image'];
+    protected $fillable = ['name', 'description', 'presentation' , 'type', 'image', 'price'];
 
     public function fichiers()
     {

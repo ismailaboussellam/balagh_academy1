@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up()
 {
-    Schema::create('notifications', function (Blueprint $table) {
+    Schema::create('filiers', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('user_id')->constrained('users');
-        $table->string('message');
-        $table->boolean('is_read')->default(false);
+        $table->string('name');
         $table->timestamps();
     });
 }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('filiers');
     }
 };

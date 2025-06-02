@@ -31,4 +31,11 @@ class UserStudent extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function filiers() {
+        return $this->belongsToMany(Filier::class, 'filier_student', 'student_id', 'filier_id');
+    }
+
+    public function groupes() {
+        return $this->belongsToMany(Groupe::class, 'groupe_student', 'student_id', 'groupe_id');
+    }
 }

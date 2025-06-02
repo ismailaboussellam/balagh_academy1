@@ -1,19 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FatherController;
-use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\CoursFrontController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\CoursFrontController;
+
 
 
 require __DIR__.'/admin.php';
 require __DIR__.'/student.php';
+require __DIR__.'/auth.php';
 
 // صفحات عامة
 Route::view('/', 'pages.home')->name('home');
@@ -87,12 +89,7 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::get('/teacher/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
 });
 
-
-
-
-
-
-
+// إدارة الدورات
 Route::get('/cours', [CoursFrontController::class, 'index'])->name('cours.index');
 Route::get('/cours/{id}/details', [CoursFrontController::class, 'details'])->name('cours.details');
 Route::get('/cours/{id}/learn', [CoursFrontController::class, 'learn'])->name('cours.learn');
@@ -134,4 +131,3 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 Route::resource('lessons', LessonController::class);
 
 // تحميل ملف auth.php
-require __DIR__.'/auth.php';

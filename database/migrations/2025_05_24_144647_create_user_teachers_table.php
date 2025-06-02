@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('user_teachers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('specialization')->nullable();
             $table->text('bio')->nullable();
-            $table->timestamps();
+            $table->timestamps()->nullable();
         });
     }
 
