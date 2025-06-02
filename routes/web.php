@@ -87,6 +87,10 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::delete('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'destroyExam'])->name('teacher.exams.destroy');
     Route::get('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'showExam'])->name('teacher.exams.show');
     Route::get('/teacher/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
+
+    // comtents
+    Route::get('/subjects/{subject}/lessons/{lesson}/comments', [TeacherController::class, 'showLessonComments'])->name('teacher.comments.index');
+    Route::post('/comments/{comment}/reply', [TeacherController::class, 'replyToComment'])->name('teacher.comments.reply');
 });
 
 // إدارة الدورات
