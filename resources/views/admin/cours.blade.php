@@ -45,6 +45,9 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ $course->name }}</h5>
                     <p class="card-text text-muted">{{ Str::limit($course->description, 100) }}</p>
+                    @if($course->type == 'payant')
+                    <p class="card-text"><strong>السعر:</strong> {{ $course->price }}</p>
+                    @endif
                 </div>
                 <div class="card-footer bg-white d-flex justify-content-between">
                     <a href="{{ route('admin.cours.details', $course->id) }}" class="btn btn-sm btn-primary">
@@ -101,6 +104,10 @@
                             <option value="payant">مدفوع</option>
                         </select>
                     </div>
+                    <div class="mb-3 price-field" id="price-field" style="display: none;">
+                        <label for="price" class="form-label">سعر الدرس</label>
+                        <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" value="0">
+                    </div>
                     <div class="mb-3">
                         <label for="image" class="form-label">صورة الدرس</label>
                         <input type="file" class="form-control" id="image" name="image">
@@ -146,6 +153,10 @@
                             <option value="payant">مدفوع</option>
                         </select>
                     </div>
+                    <div class="mb-3 edit-price-field" id="edit-price-field" style="display: none;">
+                        <label for="edit_price" class="form-label">سعر الدرس</label>
+                        <input type="number" class="form-control" id="edit_price" name="price" min="0" step="0.01" value="0">
+                    </div>
                     <div class="mb-3">
                         <label for="edit_image" class="form-label">صورة الدرس</label>
                         <input type="file" class="form-control" id="edit_image" name="image">
@@ -164,6 +175,36 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
+        // Vérifier le type de cours au chargement de la page
+        if ($('#type').val() === 'payant') {
+            $('#price-field').show();
+        }
+        
+        // Show/hide price field based on course type
+        $('#type').on('change', function() {
+            if ($(this).val() === 'payant') {
+                $('#price-field').show();
+            } else {
+                $('#price-field').hide();
+                $('#price').val('0');
+            }
+        });
+        
+        // Vérifier le type de cours dans le formulaire d'édition au chargement
+        if ($('#edit_type').val() === 'payant') {
+            $('#edit-price-field').show();
+        }
+        
+        // Show/hide price field in edit form
+        $('#edit_type').on('change', function() {
+            if ($(this).val() === 'payant') {
+                $('#edit-price-field').show();
+            } else {
+                $('#edit-price-field').hide();
+                $('#edit_price').val('0');
+            }
+        });
+        
         // Filter courses
         $('.filter-btn').on('click', function() {
             $('.filter-btn').removeClass('active');
@@ -202,6 +243,49 @@
                     }
                 });
             }
+        });
+        
+        // Edit course - load data
+        $('.edit-course').on('click', function() {
+            const courseId = $(this).data('id');
+            
+            // Set form action URL
+            $('#editCoursForm').attr('action', `/admin/cours/${courseId}`);
+            
+            // Get course data
+            $.ajax({
+                url: `/admin/cours/${courseId}/edit`,
+                type: 'GET',
+                success: function(course) {
+                    $('#edit_name').val(course.name);
+                    $('#edit_description').val(course.description);
+                    $('#edit_presentation').val(course.presentation);
+                    $('#edit_type').val(course.type);
+                    
+                    // Show/hide price field based on course type
+                    if (course.type === 'payant') {
+                        $('#edit-price-field').show();
+                        $('#edit_price').val(course.price || 0);
+                    } else {
+                        $('#edit-price-field').hide();
+                        $('#edit_price').val(0);
+                    }
+                    
+                    // Show current image if exists
+                    if (course.image) {
+                        $('#current_image_container').html(`
+                            <img src="/storage/${course.image}" alt="Current Image" class="img-thumbnail" style="max-height: 100px">
+                            <p class="text-muted small">الصورة الحالية</p>
+                        `);
+                    } else {
+                        $('#current_image_container').empty();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('حدث خطأ أثناء تحميل بيانات الدرس');
+                }
+            });
         });
     });
 </script>

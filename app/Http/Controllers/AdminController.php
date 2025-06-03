@@ -22,32 +22,32 @@ class AdminController extends Controller
         public function notifications() {
             return view('admin.notifications');
         }
-        public function students() {
-            return view('admin.students');
-        }
-        // public function filiers() {
-        //     return view('admin.filiers');
+        // public function students() {
+        //     return view('admin.students');
         // }
-        public function groups() {
-            return view('admin.cours');
-        }
-        public function teachers() {
-            return view('admin.teachers');
-        }
-        public function lessons() {
-            return view('admin.lessons');
-        }
+        // // public function filiers() {
+        // //     return view('admin.filiers');
+        // // }
+        // public function groups() {
+        //     return view('admin.cours');
+        // }
+        // public function teachers() {
+        //     return view('admin.teachers');
+        // }
+        // public function lessons() {
+        //     return view('admin.lessons');
+        // }
     
 
 
-    public function dashboard()
-    {
-        $lessons = Lesson::with(['student', 'teacher'])->paginate(10);
-        $exams = Evaluation::with(['student', 'lesson'])->paginate(10);
-        $students = User::where('role', 'student')->get();
-        $teachers = User::where('role', 'teacher')->get();
-        return view('admin.dashboard', compact('lessons', 'exams', 'students', 'teachers'));
-    }
+    // public function dashboard()
+    // {
+    //     $lessons = Lesson::with(['student', 'teacher'])->paginate(10);
+    //     $exams = Evaluation::with(['student', 'lesson'])->paginate(10);
+    //     $students = User::where('role', 'student')->get();
+    //     $teachers = User::where('role', 'teacher')->get();
+    //     return view('admin.dashboard', compact('lessons', 'exams', 'students', 'teachers'));
+    // }
     //test
     public function storeLecon(Request $request)
     {
