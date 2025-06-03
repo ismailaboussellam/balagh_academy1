@@ -122,43 +122,71 @@
                     </div>
                 </div>
 
-                <!-- التقييمات -->
-                <div class="flex items-start space-x-3">
+                <!-- التقييمات (تصميم مشابه لـ Google Play) -->
+                <div class="flex items-start space-x-3 mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z" />
                     </svg>
                     <div class="w-full">
-                        <h4 class="text-lg font-semibold text-gray-700">التقييمات</h4>
-                        <div class="mt-2 space-y-4 max-h-96 overflow-y-auto">
-                            @if ($lesson->evaluations->count())
-                                @foreach ($lesson->evaluations as $evaluation)
-                                    <div class="p-4 bg-gray-100 rounded-lg">
-                                        <p class="text-sm font-semibold">{{ $evaluation->user->first_name }} {{ $lesson->user->last_name }} ({{ $evaluation->user->role === 'teacher' ? 'أستاذ' : 'طالب' }}):</p>
-                                        <p class="text-sm text-gray-600">{{ $evaluation->rating }}/5 - {{ $evaluation->comment ?? 'لا يوجد تعليق' }}</p>
-                                    </div>
-                                @endforeach
-                            @else
-                                <p class="text-sm text-gray-600">لا توجد تقييمات</p>
-                            @endif
-                        </div>
-                        <form action="{{ route('teacher.evaluations.store', [$subject, $lesson]) }}" method="POST" class="mt-4">
+                        <h4 class="text-lg font-semibold text-gray-700 mb-4">التقييمات</h4>
+
+                        <!-- نموذج إضافة تقييم -->
+                        <form action="{{ route('teacher.evaluations.store', [$subject, $lesson]) }}" method="POST" class="mb-6">
                             @csrf
-                            <select name="rating" class="w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                            <textarea name="comment" class="w-full rounded-md border-gray-300 shadow-sm mt-2 focus:ring-indigo-500 focus:border-indigo-500 h-24" placeholder="أضف تعليقًا (اختياري)"></textarea>
+                            <div class="flex items-center mb-2">
+                                <div class="flex space-x-1">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="rating" value="{{ $i }}" class="hidden" required>
+                                            <svg class="w-6 h-6 text-gray-300 hover:text-yellow-400 {{ $i <= old('rating', 0) ? 'text-yellow-400' : '' }}" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z"/>
+                                            </svg>
+                                        </label>
+                                    @endfor
+                                </div>
+                            </div>
+                            <textarea name="comment" class="w-full rounded-md border-gray-300 shadow-sm mt-2 focus:ring-indigo-500 focus:border-indigo-500 h-24 p-2 text-sm" placeholder="اكتب تعليقك (اختياري)"></textarea>
                             @error('rating')
-                                <span class="text-red-600 text-sm">{{ $message }}</span>
+                                <span class="text-red-600 text-sm block">{{ $message }}</span>
                             @enderror
                             @error('comment')
-                                <span class="text-red-600 text-sm">{{ $message }}</span>
+                                <span class="text-red-600 text-sm block">{{ $message }}</span>
                             @enderror
                             <button type="submit" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition duration-300">إضافة تقييم</button>
                         </form>
+
+                        <!-- عرض التقييمات -->
+                        <div class="space-y-4">
+                            @if ($lesson->evaluations->count())
+                                @foreach ($lesson->evaluations as $evaluation)
+                                    <div class="border-b pb-4">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm font-semibold text-gray-800">
+                                                {{ $evaluation->user->first_name }} {{ $evaluation->user->last_name }}
+                                            </span>
+                                            <span class="text-xs text-gray-500">
+                                                ({{ $evaluation->user->role === 'teacher' ? 'أستاذ' : 'طالب' }})
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center space-x-1 mt-1">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <svg class="w-4 h-4 {{ $i <= $evaluation->rating ? 'text-yellow-400' : 'text-gray-300' }}" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z"/>
+                                                </svg>
+                                            @endfor
+                                            <span class="text-xs text-gray-500 ml-2">
+                                                {{ $evaluation->created_at->format('d F Y') }}
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            {{ $evaluation->comment ?? 'لا يوجد تعليق' }}
+                                        </p>
+                                    </div>
+                                @endforeach
+                            @else
+                                <p class="text-sm text-gray-600">لا توجد تقييمات بعد.</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -169,4 +197,23 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript لتحديث لون النجوم عند الاختيار -->
+    <script>
+        document.querySelectorAll('input[name="rating"]').forEach((input) => {
+            input.addEventListener('change', function () {
+                const rating = parseInt(this.value);
+                const stars = this.closest('.flex').querySelectorAll('svg');
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('text-yellow-400');
+                        star.classList.remove('text-gray-300');
+                    } else {
+                        star.classList.add('text-gray-300');
+                        star.classList.remove('text-yellow-400');
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>

@@ -414,21 +414,6 @@ public function destroyExam($subject, Exam $exam)
 }
 
 
-public function replyToComment(Request $request, $commentId)
-{
-    $comment = Comment::findOrFail($commentId);
-    if ($comment->lesson->teacher_id !== Auth::id()) {
-        abort(403, 'غير مصرح لك بالرد على هذا التعليق');
-    }
-
-    $request->validate([
-        'response' => 'required|string|max:1000',
-    ]);
-
-    $comment->update(['teacher_response' => $request->response]);
-
-    return redirect()->back()->with('success', 'تم إرسال الرد بنجاح!');
-}
 
     public function storeComment(Request $request, $subjectId, $lessonId)
     {
@@ -460,4 +445,17 @@ public function replyToComment(Request $request, $commentId)
 
         return view('teacher.subjects.lesson_comments', compact('subject', 'lesson', 'comments'));
     }
+    public function replyToComment(Request $request, Comment $comment)
+    {
+        $request->validate([
+            'teacher_response' => 'required|string|max:1000',
+        ]);
+
+        $comment->update([
+            'teacher_response' => $request->teacher_response,
+        ]);
+
+        return redirect()->back()->with('success', 'تم إضافة الرد بنجاح!');
+    }
+
 }
