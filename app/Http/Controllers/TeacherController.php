@@ -293,15 +293,7 @@ public function updateLesson(Request $request, Subject $subject, Lesson $lesson)
         return redirect()->route('teacher.subjects.show', $subject);
     }
 
-    public function storeComment(Request $request, Subject $subject, Lesson $lesson)
-    {
-        $request->validate(['content' => 'required|string']);
-        $lesson->comments()->create([
-            'user_id' => Auth::id(),
-            'content' => $request->content,
-        ]);
-        return redirect()->route('teacher.lessons.show', [$subject, $lesson]);
-    }
+
 
     public function storeEvaluation(Request $request, Subject $subject, Lesson $lesson)
     {
@@ -421,18 +413,6 @@ public function destroyExam($subject, Exam $exam)
     return redirect()->route('teacher.exams')->with('success', 'تم حذف الامتحان بنجاح!');
 }
 
-// Affichage des commantaire
-public function showLessonComments($subjectId, $lessonId)
-{
-    $lesson = Lesson::where('subject_id', $subjectId)->findOrFail($lessonId);
-    if ($lesson->teacher_id !== Auth::id()) {
-        abort(403, 'غير مصرح لك بمشاهدة هذه التعليقات');
-    }
-
-    $comments = $lesson->comments()->with('user')->get();
-
-    return view('teacher.subjects.lesson_comments', compact('lesson', 'comments'));
-}
 
 public function replyToComment(Request $request, $commentId)
 {
@@ -450,5 +430,34 @@ public function replyToComment(Request $request, $commentId)
     return redirect()->back()->with('success', 'تم إرسال الرد بنجاح!');
 }
 
+    public function storeComment(Request $request, $subjectId, $lessonId)
+    {
+        $lesson = Lesson::where('subject_id', $subjectId)->findOrFail($lessonId);
 
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        Comment::create([
+            'lesson_id' => $lesson->id,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ]);
+
+        return redirect()->back()->with('success', 'تم إضافة التعليق بنجاح!');
+}
+
+    public function showLessonComments($subjectId, $lessonId)
+    {
+        $subject = Subject::findOrFail($subjectId);
+        $lesson = $subject->lessons()->findOrFail($lessonId);
+
+        if ($lesson->teacher_id !== Auth::id()) {
+            abort(403, 'غير مصرح لك بمشاهدة هذه التعليقات');
+        }
+
+        $comments = $lesson->comments()->with('user')->get();
+
+        return view('teacher.subjects.lesson_comments', compact('subject', 'lesson', 'comments'));
+    }
 }

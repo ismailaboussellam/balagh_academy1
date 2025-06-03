@@ -11,8 +11,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CoursFrontController;
 
-
-
 require __DIR__.'/admin.php';
 require __DIR__.'/student.php';
 require __DIR__.'/auth.php';
@@ -91,6 +89,7 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     // comtents
     Route::get('/subjects/{subject}/lessons/{lesson}/comments', [TeacherController::class, 'showLessonComments'])->name('teacher.comments.index');
     Route::post('/comments/{comment}/reply', [TeacherController::class, 'replyToComment'])->name('teacher.comments.reply');
+    // حذف التكرار: Route::post('/subjects/{subject}/lessons/{lesson}/comments/store', [TeacherController::class, 'storeComment'])->name('teacher.comments.store');
 });
 
 // إدارة الدورات
@@ -98,7 +97,6 @@ Route::get('/cours', [CoursFrontController::class, 'index'])->name('cours.index'
 Route::get('/cours/{id}/details', [CoursFrontController::class, 'details'])->name('cours.details');
 Route::get('/cours/{id}/learn', [CoursFrontController::class, 'learn'])->name('cours.learn');
 Route::post('/cours/{id}/payment', [CoursFrontController::class, 'payment'])->name('cours.payment');
-
 
 // تحميل صورة الملف الشخصي
 Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfileImage'])->name('profile.uploadImage');
