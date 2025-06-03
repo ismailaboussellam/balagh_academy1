@@ -56,7 +56,7 @@ Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('
 
 // لوحة تحكم الأستاذ وإدارة الدورات (محمية بمصادقة الأستاذ)
 Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () {
-<<<<<<< HEAD
+
     Route::get('/teacher/subjects/{subject}/lessons/{lesson}', action: [LessonController::class, 'show'])->name('teacher.lessons.show');
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     // نغير /exams ليستدعي الميثود indexExams بدل تكرار
@@ -84,7 +84,7 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::delete('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'destroyExam'])->name('teacher.exams.destroy');
     Route::get('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'showExam'])->name('teacher.exams.show');
     Route::get('/teacher/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects');
-=======
+
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard'); // عرض لوحة تحكم الأستاذ
     Route::get('/exams', [TeacherController::class, 'indexExams'])->name('teacher.exams'); // عرض قائمة الامتحانات
     Route::get('/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects'); // عرض قائمة المواد
@@ -109,7 +109,7 @@ Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () 
     Route::delete('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'destroyExam'])->name('teacher.exams.destroy'); // معالجة حذف امتحان
     Route::get('/subjects/{subject}/exams/{exam}', [TeacherController::class, 'showExam'])->name('teacher.exams.show'); // عرض تفاصيل امتحان
     Route::get('/teacher/subjects', [TeacherController::class, 'subjects'])->name('teacher.subjects'); // عرض قائمة المواد (تكرار، يمكن حذفه)
->>>>>>> 673a47d45b80fbb34de6aaba36c22fad841f71f4
+
 
     // إدارة التعليقات
     Route::get('/subjects/{subject}/lessons/{lesson}/comments', [TeacherController::class, 'showLessonComments'])->name('teacher.comments.index'); // عرض قائمة التعليقات
@@ -143,8 +143,7 @@ Route::middleware('auth')->group(function () {
 // لوحة تحكم المسؤول وإدارة الدروس والامتحانات (محمي بمصادقة المسؤول)
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
-    // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard'); // عرض لوحة تحكم المسؤول
-
+    
 
     // إدارة الدروس
     Route::get('/add-lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.add-lecon'); // عرض نموذج إضافة درس

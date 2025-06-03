@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('specialization')->nullable();
             $table->text('bio')->nullable();
-            $table->timestamps()->nullable();
+            $table->timestamps();
         });
     }
 
