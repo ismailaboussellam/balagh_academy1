@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            إدارة التعليقات - {{ $lesson->subject->name }} (الدرس: {{ $lesson->title }})
+            تعليقات الدرس: {{ $lesson->title }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <!-- زر العودة للدرس -->
-                <a href="{{ route('teacher.lessons.show', [$lesson->subject_id, $lesson->id]) }}"
+                <!-- زر العودة -->
+                <a href="{{ route('teacher.lessons.show', [$subject->id, $lesson->id]) }}"
                    class="bg-gray-600 text-white px-4 py-2 rounded mb-6 inline-block hover:bg-gray-700 transition duration-200">
                     العودة إلى الدرس
                 </a>
@@ -20,61 +20,59 @@
                     </div>
                 @endif
 
-                <!-- قائمة التعليقات -->
-                <div class="space-y-6">
-                    @forelse ($comments as $comment)
-                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-gray-600">
-                                    من: {{ $comment->user->name }} - {{ $comment->created_at->format('d/m/Y H:i') }}
-                                </span>
+                <div class="space-y-4">
+                    @if ($comments->count())
+                        @foreach ($comments as $comment)
+                            <div class="p-4 bg-gray-100 rounded-lg relative">
+                                <p class="text-sm font-semibold">{{ $comment->user->first_name }} {{ $comment->user->last_name }} ({{ $comment->user->role === 'teacher' ? 'أستاذ' : 'طالب' }}):</p>
+                                <p class="text-sm text-gray-600">{{ $comment->content }}</p>
                                 @if ($comment->teacher_response)
-                                    <span class="text-sm text-green-600">تم الرد</span>
+                                    <div class="ml-4 mt-2 p-2 bg-gray-50 rounded-lg">
+                                        <p class="text-sm text-indigo-600">رد الأستاذ: {{ $comment->teacher_response }}</p>
+                                    </div>
                                 @else
-                                    <button type="button"
-                                            data-comment-id="{{ $comment->id }}"
-                                            class="reply-btn bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition duration-200">
+                                    <!-- زر الرد (شكل سهم يوتيوب) -->
+                                    <button onclick="toggleReplyForm(this)" class="mt-2 text-blue-600 hover:text-blue-800 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                                        </svg>
                                         رد
                                     </button>
+                                    <!-- نموذج الرد (مخفي في البداية) -->
+                                    <div id="reply-form-{{ $comment->id }}" class="hidden mt-2">
+                                        <form action="{{ route('teacher.comments.reply', $comment) }}" method="POST" class="space-y-2">
+                                            @csrf
+                                            <textarea name="teacher_response" class="w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 h-16 p-2 text-sm" placeholder="اكتب ردك هنا..."></textarea>
+                                            <div class="flex space-x-2">
+                                                <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm">
+                                                    إرسال
+                                                </button>
+                                                <button type="button" onclick="toggleReplyForm(this)" class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-sm">
+                                                    إلغاء
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 @endif
                             </div>
-                            <p class="text-gray-800">{{ $comment->content }}</p>
-
-                            <!-- فورم الرد (مخفي افتراضياً) -->
-                            <div id="reply-form-{{ $comment->id }}" class="mt-4 hidden">
-                                <form method="POST" action="{{ route('teacher.comments.reply', $comment->id) }}" class="space-y-4">
-                                    @csrf
-                                    <div>
-                                        <label for="response-{{ $comment->id }}" class="block text-sm font-medium text-gray-700">الرد</label>
-                                        <textarea name="response" id="response-{{ $comment->id }}" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
-                                        @error('response')
-                                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-200">
-                                        إرسال الرد
-                                    </button>
-                                    <button type="button" class="cancel-reply-btn bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition duration-200">
-                                        إلغاء
-                                    </button>
-                                </form>
-                            </div>
-
-                            <!-- تاريخ المحادثات (اختياري) -->
-                            @if ($comment->teacher_response)
-                                <div class="mt-4 p-2 bg-white rounded border border-gray-100">
-                                    <p class="text-sm text-gray-700">الرد: {{ $comment->teacher_response }}</p>
-                                    <p class="text-xs text-gray-500">تم الرد في: {{ $comment->updated_at->format('d/m/Y H:i') }}</p>
-                                </div>
-                            @endif
-                        </div>
-                    @empty
-                        <div class="text-center text-gray-500 py-6">
-                            لا توجد تعليقات حتى الآن.
-                        </div>
-                    @endforelse
+                        @endforeach
+                    @else
+                        <p class="text-sm text-gray-600">لا توجد تعليقات بعد.</p>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- JavaScript لتحكم في عرض/إخفاء نموذج الرد -->
+    <script>
+        function toggleReplyForm(button) {
+            const form = button.closest('.bg-gray-100').querySelector('div[id^="reply-form-"]');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+            } else {
+                form.classList.add('hidden');
+            }
+        }
+    </script>
 </x-app-layout>

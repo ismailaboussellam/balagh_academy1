@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Lesson;
 use App\Models\Comment;
 use App\Models\Subject;
+use App\Models\Evaluation;
 use App\Models\UserTeacher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -293,29 +294,9 @@ public function updateLesson(Request $request, Subject $subject, Lesson $lesson)
         return redirect()->route('teacher.subjects.show', $subject);
     }
 
-    public function storeComment(Request $request, Subject $subject, Lesson $lesson)
-    {
-        $request->validate(['content' => 'required|string']);
-        $lesson->comments()->create([
-            'user_id' => Auth::id(),
-            'content' => $request->content,
-        ]);
-        return redirect()->route('teacher.lessons.show', [$subject, $lesson]);
-    }
 
-    public function storeEvaluation(Request $request, Subject $subject, Lesson $lesson)
-    {
-        $request->validate([
-            'rating' => 'required|integer|between:1,5',
-            'comment' => 'nullable|string',
-        ]);
-        $lesson->evaluations()->create([
-            'user_id' => Auth::id(),
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-        ]);
-        return redirect()->route('teacher.lessons.show', [$subject, $lesson]);
-    }
+
+
     public function showLesson(Subject $subject, Lesson $lesson)
     {
         if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
@@ -421,33 +402,128 @@ public function destroyExam($subject, Exam $exam)
     return redirect()->route('teacher.exams')->with('success', 'تم حذف الامتحان بنجاح!');
 }
 
-// Affichage des commantaire
-public function showLessonComments($subjectId, $lessonId)
-{
-    $lesson = Lesson::where('subject_id', $subjectId)->findOrFail($lessonId);
-    if ($lesson->teacher_id !== Auth::id()) {
-        abort(403, 'غير مصرح لك بمشاهدة هذه التعليقات');
-    }
 
-    $comments = $lesson->comments()->with('user')->get();
 
-    return view('teacher.subjects.lesson_comments', compact('lesson', 'comments'));
+    public function storeComment(Request $request, $subjectId, $lessonId)
+    {
+        $lesson = Lesson::where('subject_id', $subjectId)->findOrFail($lessonId);
+
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        Comment::create([
+            'lesson_id' => $lesson->id,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ]);
+
+        return redirect()->back()->with('success', 'تم إضافة التعليق بنجاح!');
 }
 
-public function replyToComment(Request $request, $commentId)
+    public function showLessonComments($subjectId, $lessonId)
+    {
+        $subject = Subject::findOrFail($subjectId);
+        $lesson = $subject->lessons()->findOrFail($lessonId);
+
+        if ($lesson->teacher_id !== Auth::id()) {
+            abort(403, 'غير مصرح لك بمشاهدة هذه التعليقات');
+        }
+
+        $comments = $lesson->comments()->with('user')->get();
+
+        return view('teacher.subjects.lesson_comments', compact('subject', 'lesson', 'comments'));
+    }
+    public function replyToComment(Request $request, Comment $comment)
+    {
+        $request->validate([
+            'teacher_response' => 'required|string|max:1000',
+        ]);
+
+        $comment->update([
+            'teacher_response' => $request->teacher_response,
+        ]);
+
+        return redirect()->back()->with('success', 'تم إضافة الرد بنجاح!');
+    }
+
+    public function storeEvaluation(Request $request, $subjectId, $lessonId)
 {
-    $comment = Comment::findOrFail($commentId);
-    if ($comment->lesson->teacher_id !== Auth::id()) {
-        abort(403, 'غير مصرح لك بالرد على هذا التعليق');
+    $lesson = Lesson::where('subject_id', $subjectId)->findOrFail($lessonId);
+
+    $request->validate([
+        'rating' => 'required|integer|between:1,5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    Evaluation::create([
+        'lesson_id' => $lesson->id,
+        'user_id' => Auth::id(),
+        'rating' => $request->rating,
+        'comment' => $request->comment,
+    ]);
+
+    return redirect()->back()->with('success', 'تم تسجيل التقييم بنجاح. شكراً لمساهمتك في تحسين جودة المحتوى!');
+}
+
+// للتعليقات
+public function updateComment(Request $request, Comment $comment)
+{
+    if (Auth::id() !== $comment->user_id) {
+        abort(403, 'غير مصرح لك بتعديل هذا التعليق');
     }
 
     $request->validate([
-        'response' => 'required|string|max:1000',
+        'content' => 'required|string|max:1000',
     ]);
 
-    $comment->update(['teacher_response' => $request->response]);
+    $comment->update([
+        'content' => $request->content,
+    ]);
 
-    return redirect()->back()->with('success', 'تم إرسال الرد بنجاح!');
+    return redirect()->back()->with('success', 'تم تعديل التعليق بنجاح!');
+}
+
+public function deleteComment(Comment $comment)
+{
+    if (Auth::id() !== $comment->user_id && Auth::user()->role !== 'teacher') {
+        abort(403, 'غير مصرح لك بحذف هذا التعليق');
+    }
+
+    $comment->delete();
+
+    return redirect()->back()->with('success', 'تم حذف التعليق بنجاح!');
+}
+
+// للتقييمات
+public function updateEvaluation(Request $request, Evaluation $evaluation)
+{
+    if (Auth::id() !== $evaluation->user_id) {
+        abort(403, 'غير مصرح لك بتعديل هذا التقييم');
+    }
+
+    $request->validate([
+        'rating' => 'required|integer|between:1,5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    $evaluation->update([
+        'rating' => $request->rating,
+        'comment' => $request->comment,
+    ]);
+
+    return redirect()->back()->with('success', 'تم تعديل التقييم بنجاح!');
+}
+
+public function deleteEvaluation(Evaluation $evaluation)
+{
+    if (Auth::id() !== $evaluation->user_id) {
+        abort(403, 'غير مصرح لك بحذف هذا التقييم');
+    }
+
+    $evaluation->delete();
+
+    return redirect()->back()->with('success', 'تم حذف التقييم بنجاح!');
 }
 
 
