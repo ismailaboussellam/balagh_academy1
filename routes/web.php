@@ -59,7 +59,7 @@ Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('
 
 // لوحة تحكم الاستاذ وإدارة الدورات
 Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () {
-    Route::get('/teacher/subjects/{subject}/lessons/{lesson}', [LessonController::class, 'show'])->name('teacher.lessons.show');
+    Route::get('/teacher/subjects/{subject}/lessons/{lesson}', action: [LessonController::class, 'show'])->name('teacher.lessons.show');
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     // نغير /exams ليستدعي الميثود indexExams بدل تكرار
     Route::get('/exams', [TeacherController::class, 'indexExams'])->name('teacher.exams');
