@@ -2,17 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Admin\FilierGroupController;
 use App\Http\Controllers\Admin\ProfController;
-use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\EmploiController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FilierGroupController;
 
 
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
     // ... routes ...
 
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    
+    
     Route::get('/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');
     Route::get('/students', [AdminController::class, 'students'])->name('admin.students');
     // Route::get('/filiers', [AdminController::class, 'filiers'])->name('admin.filiers');
@@ -75,5 +77,17 @@ Route::get('/emplois', [EmploiController::class, 'index'])->name('admin.emplois.
 Route::post('/emplois', [EmploiController::class, 'store'])->name('admin.emplois.store');
 Route::put('/emplois/{emploi}', [EmploiController::class, 'update'])->name('admin.emplois.update');
 Route::delete('/emplois/{emploi}', [EmploiController::class, 'destroy'])->name('admin.emplois.destroy');
+
+// إضافة هذا السطر إلى ملف admin.php
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+Route::get('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('admin.dashboard.chart-data');
+
+
+// إضافة هذه المسارات في ملف admin.php داخل مجموعة المسارات الحالية
+
+// مسارات الملف الشخصي للمدير
+Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile');
+Route::post('/profile/update', [ProfileController::class, 'update'])->name('admin.profile.update');
+Route::post('/profile/update-image', [ProfileController::class, 'updateProfileImage'])->name('admin.profile.update-image');
 
 });

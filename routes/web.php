@@ -112,7 +112,7 @@ Route::middleware('auth')->group(function () {
 
 // لوحة تحكم المسؤول وإدارة الدروس والامتحانات (محمي is_admin)
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    
 
     // دروس
     Route::get('/add-lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.add-lecon');

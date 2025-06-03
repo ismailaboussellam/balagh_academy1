@@ -153,6 +153,7 @@
                     <div class="mb-3">
                         <label for="fichier" class="form-label">الملف</label>
                         <input type="file" class="form-control" id="fichier" name="fichier" required>
+                        <small class="text-muted">يمكنك تحميل ملفات PDF، DOCX، وغيرها</small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -188,7 +189,7 @@
                     </div>
                     <div class="mb-3" id="video_file_container">
                         <label for="video_file" class="form-label">ملف الفيديو</label>
-                        <input type="file" class="form-control" id="video_file" name="video_file">
+                        <input type="file" class="form-control" id="video_file" name="video_file" accept="video/*">
                     </div>
                     <div class="mb-3 d-none" id="video_url_container">
                         <label for="video_url" class="form-label">رابط الفيديو</label>
@@ -235,6 +236,10 @@
                             <option value="payant" {{ $cours->type == 'payant' ? 'selected' : '' }}>مدفوع</option>
                         </select>
                     </div>
+                    <div class="mb-3" id="edit_price_container" {{ $cours->type == 'gratuit' ? 'style="display: none;"' : '' }}>
+                        <label for="edit_price" class="form-label">سعر الدرس</label>
+                        <input type="number" class="form-control" id="edit_price" name="price" value="{{ $cours->price }}" min="0" step="0.01">
+                    </div>
                     <div class="mb-3">
                         <label for="edit_image" class="form-label">صورة الدرس</label>
                         <input type="file" class="form-control" id="edit_image" name="image">
@@ -266,6 +271,15 @@
             } else {
                 $('#video_file_container').addClass('d-none');
                 $('#video_url_container').removeClass('d-none');
+            }
+        });
+        
+        // Toggle price field in edit form
+        $('#edit_type').change(function() {
+            if ($(this).val() === 'payant') {
+                $('#edit_price_container').show();
+            } else {
+                $('#edit_price_container').hide();
             }
         });
         
