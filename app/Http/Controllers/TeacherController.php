@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Lesson;
 use App\Models\Comment;
 use App\Models\Subject;
+use App\Models\Evaluation;
 use App\Models\UserTeacher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -295,19 +296,7 @@ public function updateLesson(Request $request, Subject $subject, Lesson $lesson)
 
 
 
-    public function storeEvaluation(Request $request, Subject $subject, Lesson $lesson)
-    {
-        $request->validate([
-            'rating' => 'required|integer|between:1,5',
-            'comment' => 'nullable|string',
-        ]);
-        $lesson->evaluations()->create([
-            'user_id' => Auth::id(),
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-        ]);
-        return redirect()->route('teacher.lessons.show', [$subject, $lesson]);
-    }
+
     public function showLesson(Subject $subject, Lesson $lesson)
     {
         if ($subject->teacher_id !== Auth::id() || $lesson->teacher_id !== Auth::id()) {
@@ -457,5 +446,85 @@ public function destroyExam($subject, Exam $exam)
 
         return redirect()->back()->with('success', 'تم إضافة الرد بنجاح!');
     }
+
+    public function storeEvaluation(Request $request, $subjectId, $lessonId)
+{
+    $lesson = Lesson::where('subject_id', $subjectId)->findOrFail($lessonId);
+
+    $request->validate([
+        'rating' => 'required|integer|between:1,5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    Evaluation::create([
+        'lesson_id' => $lesson->id,
+        'user_id' => Auth::id(),
+        'rating' => $request->rating,
+        'comment' => $request->comment,
+    ]);
+
+    return redirect()->back()->with('success', 'تم تسجيل التقييم بنجاح. شكراً لمساهمتك في تحسين جودة المحتوى!');
+}
+
+// للتعليقات
+public function updateComment(Request $request, Comment $comment)
+{
+    if (Auth::id() !== $comment->user_id) {
+        abort(403, 'غير مصرح لك بتعديل هذا التعليق');
+    }
+
+    $request->validate([
+        'content' => 'required|string|max:1000',
+    ]);
+
+    $comment->update([
+        'content' => $request->content,
+    ]);
+
+    return redirect()->back()->with('success', 'تم تعديل التعليق بنجاح!');
+}
+
+public function deleteComment(Comment $comment)
+{
+    if (Auth::id() !== $comment->user_id && Auth::user()->role !== 'teacher') {
+        abort(403, 'غير مصرح لك بحذف هذا التعليق');
+    }
+
+    $comment->delete();
+
+    return redirect()->back()->with('success', 'تم حذف التعليق بنجاح!');
+}
+
+// للتقييمات
+public function updateEvaluation(Request $request, Evaluation $evaluation)
+{
+    if (Auth::id() !== $evaluation->user_id) {
+        abort(403, 'غير مصرح لك بتعديل هذا التقييم');
+    }
+
+    $request->validate([
+        'rating' => 'required|integer|between:1,5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    $evaluation->update([
+        'rating' => $request->rating,
+        'comment' => $request->comment,
+    ]);
+
+    return redirect()->back()->with('success', 'تم تعديل التقييم بنجاح!');
+}
+
+public function deleteEvaluation(Evaluation $evaluation)
+{
+    if (Auth::id() !== $evaluation->user_id) {
+        abort(403, 'غير مصرح لك بحذف هذا التقييم');
+    }
+
+    $evaluation->delete();
+
+    return redirect()->back()->with('success', 'تم حذف التقييم بنجاح!');
+}
+
 
 }
