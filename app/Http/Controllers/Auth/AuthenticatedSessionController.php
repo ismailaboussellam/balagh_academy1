@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
         } elseif (Str::contains($route, 'teacher')) {
             return view('auth.teacher_login');
         } else {
-            return view('auth.student_login'); 
+            return view('auth.student_login');
         }
 
 }
@@ -53,7 +53,6 @@ class AuthenticatedSessionController extends Controller
     {
         $errors = [];
         $user = User::where('email', $request->email)->first();
-
 
         if (!$user) {
             $errors['email'] = 'Email address not found';
@@ -83,7 +82,7 @@ class AuthenticatedSessionController extends Controller
         } elseif (Auth::user()->role === 'teacher') {
             return redirect()->route('teacher.dashboard');
 
-        } 
+        }
         else {
             return redirect()->route('select_login');
         }

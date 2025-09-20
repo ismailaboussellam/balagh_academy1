@@ -17,7 +17,7 @@ class UserFactory extends Factory
         $birthYear = fake()->numberBetween(1970, 2015);
         $age = now()->year - $birthYear;
         $fi2a = $age < 18 ? 'sighar' : 'kibar';
-        $userType = fake()->randomElement(['admin', 'ostad', 'talib', 'ab']);
+        $userType = fake()->randomElement(['admin', 'teacher', 'student']);
 
         return [
             'first_name' => fake()->firstName(),

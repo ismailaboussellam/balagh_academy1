@@ -54,7 +54,7 @@
                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition ml-4">
                     تسجيل الدخول
                 </a>
-                
+
 
             </div>
 
@@ -99,7 +99,7 @@
                class="{{ request()->routeIs('contact_us') ? 'block px-4 py-2 rounded text-green-700 bg-green-100 font-semibold' : 'block px-4 py-2 rounded text-gray-700 hover:bg-green-50 transition' }}">
                 📞 اتصل بنا
             </a>
-            <a href="{{ route('login') }}"
+            <a href="{{ route('select_login') }}"
                class="block px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700 transition">
                 🔐 تسجيل الدخول
             </a>
@@ -186,4 +186,4 @@
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-@stack('scripts') 
+@stack('scripts')

@@ -18,10 +18,18 @@ class UserStudent extends Model
         'user_id',
         'first_name',
         'last_name',
-        'birth_date',
+        'email',
+        'phone_code',
         'phone',
-        'address',
-        'education_level',
+        'gender',
+        'birth_day',
+        'birth_month',
+        'birth_year',
+        'nationality',
+        'residence_country',
+        'domain',
+        'fi2a',
+        'password',
     ];
 
     /**

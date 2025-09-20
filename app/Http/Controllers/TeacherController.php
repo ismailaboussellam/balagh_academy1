@@ -169,7 +169,8 @@ public function updateSubject(Request $request, Subject $subject)
         if ($subject->teacher_id !== Auth::id()) {
             abort(403, 'غير مصرح لك');
         }
-        return view('teacher.lessons.create', compact('subject'));
+        $subjects = Subject::where('teacher_id',Auth::id())->get();
+        return view('teacher.lessons.create', compact('subject','subjects'));
     }
 
    public function storeLesson(Request $request, Subject $subject)

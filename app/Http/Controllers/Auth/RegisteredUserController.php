@@ -51,9 +51,9 @@ class RegisteredUserController extends Controller
             'birth_year' => $request->birth_year,
             'nationality' => $request->nationality,
             'residence_country' => $request->residence_country,
-            'role' => 'studnet',
             'domain' => $request->domain,
             'fi2a' => $request->fi2a,
+            'role' => 'student', 
             'password' => Hash::make($request->password),
         ]);
 

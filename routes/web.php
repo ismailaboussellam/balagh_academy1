@@ -56,7 +56,9 @@ Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('
 
 // لوحة تحكم الأستاذ وإدارة الدورات (محمية بمصادقة الأستاذ)
 Route::middleware(['auth', 'is_teacher'])->prefix('teacher')->group(function () {
-
+    Route::get('subjects/{subject}/lessons/create', [TeacherController::class, 'createLesson'])->name('teacher.lessons.create');
+    Route::post('subjects/{subject}/lessons', [TeacherController::class, 'storeLesson'])->name('teacher.lessons.store');
+    Route::get('subjects/{subject}', [TeacherController::class, 'showSubject'])->name('teacher.subjects.show');
     Route::get('/teacher/subjects/{subject}/lessons/{lesson}', action: [LessonController::class, 'show'])->name('teacher.lessons.show');
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     // نغير /exams ليستدعي الميثود indexExams بدل تكرار
@@ -143,7 +145,7 @@ Route::middleware('auth')->group(function () {
 // لوحة تحكم المسؤول وإدارة الدروس والامتحانات (محمي بمصادقة المسؤول)
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
-    
+
 
     // إدارة الدروس
     Route::get('/add-lecon', [AdminController::class, 'showAddLeconForm'])->name('admin.add-lecon'); // عرض نموذج إضافة درس
