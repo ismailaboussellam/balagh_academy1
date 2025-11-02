@@ -9,6 +9,9 @@ use App\Models\UserTeacher;
 use App\Models\Filier;
 use App\Models\Groupe;
 use Illuminate\Support\Facades\Hash;
+// export fichie excel 
+use App\Exports\TeacherStudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProfController extends Controller
 {
@@ -74,4 +77,13 @@ class ProfController extends Controller
         $teacher->delete();
         return redirect()->back()->with('success', 'تم حذف الأستاذ بنجاح');
     }
+    // export fichie excel 
+    
+
+// ...
+
+public function export($id)
+{
+    return Excel::download(new TeacherStudentsExport($id), 'teacher-students.xlsx');
+}
 }
