@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\FilierGroupController;
 
 
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
+    // fichie excel
+    Route::get('/teachers/{id}/export', [ProfController::class, 'export'])->name('admin.teachers.export');
     // ... routes ...
 
     

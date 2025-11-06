@@ -14,6 +14,8 @@
                 <th>الشعب</th>
                 <th>المجموعات</th>
                 <th>إجراءات</th>
+                {{-- export fichie excel --}}
+                <th>استخراج ملف excel</th>
             </tr>
         </thead>
         <tbody>
@@ -50,6 +52,13 @@
                         </form>
                         @endif
                     </td>
+                    <td>
+                         {{-- export fichie Excel --}}
+                        <a href="{{ route('admin.teachers.export', $prof->teacher->id) }}" class="btn btn-sm btn-outline-success">
+                                  <i class="fa fa-file-excel"></i>
+                        </a>
+                    </td>
+               
                 </tr>
             @endforeach
         </tbody>
